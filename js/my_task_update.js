@@ -234,7 +234,7 @@ function update_user_meta_custome(elem) {
         }
         console.log(statusvalue);
        
-        if(convertintombs <= 100){
+        if(convertintombs < 50){
         
         
         
