@@ -693,8 +693,16 @@ if ($_GET['contentManagerRequest'] == 'changepassword') {
             update_user_option($user_id, 'convo_welcomeemail_datetime', $t*1000);
        }      
     }else{
-       
-        $message['msg'] = $user_id->errors['invalid_username'][0];
+        
+        $userregister_responce = (array)$user_id;
+		  
+		   if(empty($userregister_responce['errors']['invalid_username'][0])){
+			   
+			   $message['msg'] = $userregister_responce['errors']['invalid_email'][0];
+		   }else{
+			   
+			   $message['msg'] = $userregister_responce['errors']['invalid_username'][0];
+		   }
         
     } 
     } else {

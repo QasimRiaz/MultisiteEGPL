@@ -455,6 +455,7 @@ function add_new_admin_user(){
                      swal({
 					title: "Error",
 					text: message.msg,
+                                        html:true,
 					type: "error",
 					confirmButtonClass: "btn-danger",
 					confirmButtonText: "Ok"
