@@ -1337,7 +1337,7 @@ function sync_bulk_users(){
                 
 
                 var useridstml = "";
-                useridstml += '<form id="myform" action="/sync-to-floorplan/" method="post">';
+                useridstml += '<form id="myform" action="'+url+'/sync-to-floorplan/" method="post">';
 
                 for (var i = 0; i < checkedRows.length; i++) {
                      jQuery.each(checkedRows[i], function(i, item) {

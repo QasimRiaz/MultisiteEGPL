@@ -28,7 +28,7 @@
         
         
 <!--        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/exporting.js?v=2.95"></script>-->
-        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/contentmanager.js?v=3.00"></script>
+        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/contentmanager.js?v=3.01"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/jquery.watable.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bootstrap-datepicker.min.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bootstrap-multiselect.js?v=2.95"></script>
@@ -169,7 +169,7 @@ tinymce.init({
             jQuery(".mynav li a").on("click", function(){
                     jQuery('.opened').addClass('opened');
                     jQuery('.active').removeClass('active');
-                    jQuery('a[href="' + window.location.protocol + "//" + window.location.host + this.location.pathname + '"]').parent('li').addClass("active");
+                   // jQuery('a[href="' + window.location.protocol + "//" + window.location.host + this.location.pathname + '"]').parent('li').addClass("active");
             });
 jQuery('#daterange3').daterangepicker({
 				singleDatePicker: true,
