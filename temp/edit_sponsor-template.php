@@ -158,8 +158,16 @@
                               <div class="form-group row">
                                     <label class="col-sm-2 form-control-label">User Level <strong>*</strong></label>
                                     <div class="col-sm-10">
-                                           
-								 <select  class="form-control" id="Srole" required>
+                                        <?php if($rolename == 'contentmanager'){?>
+                                        
+                                            <select  class="form-control" id="Srole" disabled="true">
+                                            
+                                        <?php }else{?>
+                                            
+                                            <select  class="form-control" id="Srole" requried>
+                                                
+                                        <?php }?>
+								 
 								
                                                                      <option></option>
                                                                          <?php

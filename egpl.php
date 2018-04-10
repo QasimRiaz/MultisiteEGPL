@@ -307,6 +307,7 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
     
     $keys_string[]= 'first_name';
     $keys_string[]= 'last_name';
+    $keys_string[]= 'role';
     $keys_string[]= 'date';
     $keys_string[]= 'time';
     $keys_string[]= 'user_pass';
@@ -924,7 +925,7 @@ try {
     $field_key_string = getInbetweenStrings('{', '}', $body);
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $formemail = $oldvalues['ContentManager']['formemail'];
-   
+    $fromname = stripslashes ($sponsor_info[$sendcustomewelcomeemail]['fromname']);
    
     
     
@@ -935,7 +936,7 @@ try {
     }
    $bcc =  $sponsor_info[$sendcustomewelcomeemail]['BCC'];
  
-   $fromname = $_POST['fromname'];
+  // $fromname = $_POST['fromname'];
   
 //print_r($attendeefields_data);;
     
@@ -991,7 +992,7 @@ try {
             
              foreach($field_key_string as $index=>$keyvalue){
                   
-                      if($keyvalue == 'site_title' || $keyvalue == 'date' || $keyvalue == 'time' || $keyvalue == 'site_url' || $keyvalue == 'user_pass'|| $keyvalue == 'user_login'){
+                      if($keyvalue == 'role' || $keyvalue == 'site_title' || $keyvalue == 'date' || $keyvalue == 'time' || $keyvalue == 'site_url' || $keyvalue == 'user_pass'|| $keyvalue == 'user_login'){
                       
                        
                       if($keyvalue == 'user_pass'){
@@ -1005,10 +1006,35 @@ try {
                       }else if($keyvalue == 'user_login'){
                           
                           $data_field_array[] = array('name'=>$keyvalue,'content'=>$userdata->user_login);  
+                      }else if($keyvalue == 'role'){
+                          
+                          $user_id = $userdata->ID;
+                          $getcurrentuserdata = get_userdata( $user_id );
+                          $blog_id = get_current_blog_id();
+                          $get_all_roles_array = 'wp_'.$blog_id.'_user_roles';
+                          $get_all_roles = get_option($get_all_roles_array);
+                          foreach ($get_all_roles as $key => $name) {
+                              
+                              if(implode(', ', $getcurrentuserdata->roles) == $key){
+                                  
+                                  $currentuserRole = $name['name'];
+                                  
+                                  
+                              }
+                              
+                              
+                              
+                          }
+                          
+                          
+                          $data_field_array[] = array('name'=>$keyvalue,'content'=>$currentuserRole); 
                       }
                       
                       
+                      
                    }else{
+                       
+                       
                        
                     if($site_prefix.$keyvalue == $value['colkey']){
                         
@@ -4679,6 +4705,29 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
              
              if($keyvalue == 'user_login' ||$keyvalue == 'date' || $keyvalue == 'issues_passes' || $keyvalue == 'create_password_url' || $keyvalue == 'time'|| $keyvalue == 'user_pass'|| $keyvalue == 'site_url'|| $keyvalue == 'site_title'){
                  
+             }else if($keyvalue == "role" ){
+                 
+                          $blog_id = get_current_blog_id();
+                          $get_all_roles_array = 'wp_'.$blog_id.'_user_roles';
+                          $get_all_roles = get_option($get_all_roles_array);
+                          foreach ($get_all_roles as $key => $name) {
+                              
+                              if(implode(', ', $user->roles) == $key){
+                                  
+                                  $currenturerRole = $name['name'];
+                                  
+                                  
+                              }
+                              
+                              
+                              
+                          }
+                          
+                          
+                          
+                 
+                 $body_message = str_replace('{'.$keyvalue.'}', $currenturerRole, $body_message);
+                 
              }else{
                  
                  $get_meta_value = get_user_meta_merger_field_value($user_id,$keyvalue);
@@ -4704,6 +4753,9 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
         $subject_body = str_replace('{time}', $time, $subject_body);
         $subject_body = str_replace('{site_url}', $site_url, $subject_body);
         $subject_body = str_replace('{site_title}', $site_title, $subject_body);
+        
+        
+        
         
         
         $mainheaderbackground = $oldvalues['ContentManager']['mainheader'];
@@ -5026,6 +5078,7 @@ function createuserlist_after_mapping($fileurl,$colmapping_list,$welcomeemailsta
             $data_field_array[] = array('name'=>'user_pass','content'=>$user_pass);
             $data_field_array[] = array('name'=>'first_name','content'=>$firstname);
             $data_field_array[] = array('name'=>'last_name','content'=>$lastname);
+            $data_field_array[] = array('name'=>'role','content'=>$role);
             $to_message_array[]=array('email'=>$email,'name'=>$firstname,'type'=>'to');
             $user_data_array[] =array(
                 'rcpt'=>$email,
