@@ -7,7 +7,6 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
     //$oldvalues = get_option( 'ContenteManager_Settings' );
     
     
-    
   // $get_all_nav = wp_get_nav_menu_items('main_menu');
    //echo '<pre>';
    //print_r($get_all_nav);
@@ -44,6 +43,9 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
     
     $template_name_selected = ucwords(str_replace('_', ' ', $loadreportname));
     $content = $sponsor_info[$loadreportname]['welcomeboday'];
+    
+    
+    
     $editor_id = 'welcomebodytext';
     include 'cm_header.php';
     include 'cm_left_menu_bar.php';
@@ -177,15 +179,26 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                     
                     </div>
                   <div class="form-group row">
-                                    <label class="col-sm-3 form-control-label">Bcc <i style="cursor: pointer;" title='Please input an (only one) email address. All outgoing Welcome emails will be blind carbon copied to this address.'class="reporticon font-icon fa fa-question-circle"></i></label>
+                                    <label class="col-sm-3 form-control-label">Bcc <i style="cursor: pointer;" title='Please input an (only one) email address. All outgoing Welcome emails will be blind carbon copied to this address.' class="reporticon font-icon fa fa-question-circle"></i></label>
                                     <div class="col-sm-9">
                                        <div class="form-control-wrapper form-control-icon-left">    
 							<input type="text"  class="form-control" id="BCC" placeholder="BCC" value="<?php echo  $sponsor_info[$loadreportname]['BCC'];?>" >
 							<i class="font-icon fa fa-copy"></i>	
                                        </div>
+                                        
                                     </div>
                                     
                     </div>
+<!--                  <div class="form-group row">
+                                    <label class="col-sm-3 form-control-label">CC <i style="cursor: pointer;" title='Please input one or multiple email address (comma separated). All outgoing Welcome emails will be carbon copied to these address(es).'class="reporticon font-icon fa fa-question-circle"></i></label>
+                                    <div class="col-sm-9">
+                                       <div class="form-control-wrapper form-control-icon-left">    
+							<input type="text"  class="form-control" id="CC" placeholder="CC" value="<?php echo  $sponsor_info[$loadreportname]['CC'];?>" >
+							<i class="font-icon fa fa-copy"></i>	
+                                       </div>
+                                    </div>
+                                    
+                    </div>-->
                   <div class="form-group row">
                                     <label class="col-sm-3 form-control-label">Subject <strong>*</strong></label>
                                     <div class="col-sm-9">

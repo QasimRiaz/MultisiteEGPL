@@ -182,6 +182,7 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
     $userreportname = $_POST['userreportname'];
     $userreportfilterdata = stripslashes($_POST['userreportfiltersdata']);
     $showcolumnslist = stripslashes($_POST['showcolumnslist']);
+    //$showroleslist = stripslashes($_POST['showroleslist']);
     $usercolunmtype = $_POST['userbytype'];
     $usercolunmname = $_POST['userbycolname'];
     user_report_savefilters($userreportname, $userreportfilterdata, $showcolumnslist, $ordercolunmtype, $usercolunmname);
@@ -239,10 +240,15 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
     $replaytoemailadd =$_POST['replaytoemailadd'];
     $welcomeemailfromname =$_POST['welcomeemailfromname'];
     $template_name = $_POST['welcomeemailtemplatename'];
+    
     if($template_name == 'Welcome Email'){
         $templatestringname = "welcome_email_template";
     }else{
-     $templatestringname = strtolower(preg_replace('/\s+/', '_', $template_name));   
+     
+     
+     
+     $templatestringname = preg_replace("/[^a-zA-Z0-9-\s]+/", "", html_entity_decode($template_name, ENT_QUOTES));
+     
     }
     
     
@@ -251,12 +257,13 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
     
     $result='';
       
-    
+   
     $sponsor_info[$templatestringname]['welcomesubject'] = $welcome_subject;
     $sponsor_info[$templatestringname]['fromname'] = $welcomeemailfromname;
     $sponsor_info[$templatestringname]['replaytoemailadd'] = $replaytoemailadd;
     $sponsor_info[$templatestringname]['welcomeboday'] = stripslashes($welcome_body);
     $sponsor_info[$templatestringname]['BCC'] = $_POST['BCC'];
+    //$sponsor_info[$templatestringname]['CC'] = $_POST['CC'];
      
      //contentmanagerlogging('Welcome Email Template',"Admin Action",serialize($_POST),$user_ID,$user_info->user_email,$result);
     
@@ -483,7 +490,7 @@ function getusersreport($data) {
     
      foreach ($columns_headers as $rows=>$row){
            
-             if ($row['title'] != 'Action') {
+             if ($row['title'] != 'Action' ) {
                  
                  
                 if ($row['title'] == 'User ID') {
@@ -565,8 +572,24 @@ function getusersreport($data) {
            
         }
         
+        $blog_id = get_current_blog_id();
+        $get_all_roles_array = 'wp_'.$blog_id.'_user_roles';
+        $all_roles = get_option($get_all_roles_array);
+        $counter = 0;
+        foreach ($all_roles as $key => $name) {
+            
+            if($name['name'] != "Administrator"){
+                
+                $user_roles_list[$counter]['name'] = $name['name'];
+                $user_roles_list[$counter]['key'] = $key;
+                $counter++;
+                
+            }
+        }
         
-        echo json_encode($columns_headers) . '//' . json_encode($columns_filter_array_data);
+        
+        
+        echo json_encode($columns_headers) . '//' . json_encode($columns_filter_array_data). '//' . json_encode($user_roles_list);
     
         
     } catch (Exception $e) {
@@ -589,7 +612,8 @@ function user_report_savefilters($userreportname, $userreportfilterdata, $showco
         $lastInsertId = contentmanagerlogging('Saved User Report', "Admin Action", $orderreportfilterdata, $user_ID, $user_info->user_email, "pre_action_data");
 
         $settitng_key = 'ContenteManager_usersreport_settings';
-
+        $userreportname =  preg_replace("/[^a-zA-Z0-9-\s]+/", "", html_entity_decode($userreportname, ENT_QUOTES));
+        
         $orderreportfilterdata = stripslashes($orderreportfilterdata);
 
         $user_reportsaved_list = get_option($settitng_key);
@@ -597,6 +621,7 @@ function user_report_savefilters($userreportname, $userreportfilterdata, $showco
         $user_reportsaved_list[$userreportname][1] = $showcolumnslist;
         $user_reportsaved_list[$userreportname][2] = $usercolunmtype;
         $user_reportsaved_list[$userreportname][3] = $usercolunmname;
+        //$user_reportsaved_list[$userreportname][4] = $showroleslist;
 
         update_option($settitng_key, $user_reportsaved_list);
         $order_reportsaved_list = get_option($settitng_key);

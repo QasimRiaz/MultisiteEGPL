@@ -931,11 +931,19 @@ try {
     
     if(empty($formemail)){
         
-        $formemail = 'noreply@convospark.com';
+        $formemail = 'noreply@expo-genie.com';
         
     }
    $bcc =  $sponsor_info[$sendcustomewelcomeemail]['BCC'];
- 
+   //$cc =  $sponsor_info[$sendcustomewelcomeemail]['CC'];
+   //$cc_array = explode(',',$cc);
+   $bcc_array = $bcc;
+   
+   
+   
+   
+   
+   
   // $fromname = $_POST['fromname'];
   
 //print_r($attendeefields_data);;
@@ -1089,7 +1097,35 @@ try {
        
        
        //$result = send_email($to,$subject,$body_message);
-
+        
+//        if(sizeof($bcc_array) > 1){
+//       
+//            foreach ($bcc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'bcc');
+//            }
+//        }else{
+//       
+//            if(!empty($bcc_array)){
+//
+//                $to_message_array[]=array('email'=>$bcc_array[0],'name'=>'','type'=>'bcc');
+//            }
+//        }
+//        if(sizeof($cc_array) > 1){
+//       
+//            foreach ($cc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'cc');
+//            }
+//        }else{
+//       
+//            if(!empty($cc_array)){
+//
+//                $to_message_array[]=array('email'=>$cc_array[0],'name'=>'','type'=>'cc');
+//            }
+//        }
+        
+        
+        
+        
         $mainheaderbackground = $oldvalues['ContentManager']['mainheader'];
         $mainheaderlogo = $oldvalues['ContentManager']['mainheaderlogo'];
         $logourl = '';
@@ -1136,8 +1172,7 @@ try {
 <p>&nbsp;</p>'; 
   
    
-  // echo '<pre>';
- //  print_r($bcc);exit;
+  
    $message = array(
         
         'html' => $html_body_message,
@@ -1147,10 +1182,10 @@ try {
         'from_name' => $fromname,
         'to' => $to_message_array,
         'headers' => array('Reply-To' => $sponsor_info[$sendcustomewelcomeemail]['replaytoemailadd']),
-        
+        'bcc_address'=>$bcc_array,
         'track_opens' => true,
         'track_clicks' => true,
-        'bcc_address' => $bcc,
+       
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
@@ -1167,6 +1202,8 @@ try {
     $ip_pool = 'Main Pool';
    // $send_at = 'example send_at';
     $result = $mandrill->messages->send($message, $async, $ip_pool, $send_at);
+    
+   
     contentmanagerlogging_file_upload($lastInsertId,serialize($result));
     echo json_encode('successfully send');
    
@@ -1211,11 +1248,17 @@ try {
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $formemail = $oldvalues['ContentManager']['formemail'];
     if(empty($formemail)){
-        $formemail = 'noreply@convospark.com';
+        $formemail = 'noreply@expo-genie.com';
         
     }
+    
    $bcc = $_POST['BCC'];
- 
+   $cc  = $_POST['CC'];
+  
+   
+   
+   
+   $replytoEmail = $_POST['RTO'];
    $fromname = $_POST['fromname'];
   
 //print_r($attendeefields_data);;
@@ -1300,14 +1343,58 @@ try {
         }
        
       
-       
+   $bcc_array = $bcc;
+   //$cc_array = explode(',',$cc);
+   
+   
+   
+//   if(sizeof($bcc_array) > 1){
+//       
+//       foreach($bcc_array as $key=>$value){
+//           
+//           
+//        $to_message_array[]=array('email'=>$value,'name'=>'','type'=>'bcc');
+//           
+//           
+//           
+//       }
+//       
+//       
+//       
+//   }else{
+//       
+//       if(!empty($bcc_array)){
+//           
+//           $to_message_array[]=array('email'=>$bcc_array[0],'name'=>'','type'=>'bcc');
+//       }
+//   }
+//   if(sizeof($cc_array) > 1){
+//       
+//       foreach($cc_array as $key=>$value){
+//           
+//           
+//           
+//         $to_message_array[]=array('email'=>$value,'name'=>'','type'=>'cc');
+//           
+//           
+//       }
+//       
+//       
+//       
+//   }else{
+//     if(!empty($cc_array)){
+//          
+//           $to_message_array[]=array('email'=>$cc_array[0],'name'=>'','type'=>'cc');
+//       }  
+//   }
+   
        
        //$result = send_email($to,$subject,$body_message);
 
     
   
    
-  // echo '<pre>';
+  
  //  print_r($bcc);exit;
    $message = array(
         
@@ -1317,11 +1404,10 @@ try {
         'from_email' => $formemail,
         'from_name' => $fromname,
         'to' => $to_message_array,
-        'headers' => array('Reply-To' => $formemail),
-        
+        'headers' => array('Reply-To' => $replytoEmail),
+        'bcc_address'=>$bcc_array,
         'track_opens' => true,
         'track_clicks' => true,
-        'bcc_address' => $bcc,
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
@@ -1389,7 +1475,7 @@ try {
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $formemail = $oldvalues['ContentManager']['formemail'];
     if(empty($formemail)){
-        $formemail='noreply@convospark.com';
+        $formemail='noreply@expo-genie.com';
     }
        
       $body_message =    $body ;
@@ -1471,7 +1557,7 @@ try {
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $formemail = $oldvalues['ContentManager']['formemail'];
     if(empty($formemail)){
-        $formemail = 'noreply@convospark.com';
+        $formemail = 'noreply@expo-genie.com';
         
     }
    
@@ -1589,6 +1675,8 @@ try {
     $template_data['emailboday'] = $get_email_template_date[$report_name]['emailboday'];
     $template_data['BCC'] = $get_email_template_date[$report_name]['BCC'];
     $template_data['fromname'] = $get_email_template_date[$report_name]['fromname'];
+    //$template_data['CC'] = $get_email_template_date[$report_name]['CC'];
+    $template_data['RTO'] = $get_email_template_date[$report_name]['RTO'];
    
      
     echo   json_encode($template_data);
@@ -1948,6 +2036,10 @@ function updateadminemailtemplate($data_array,$email_template_name){
     
       try{
           
+          
+         
+          $email_template_name = preg_replace("/[^a-zA-Z0-9-\s]+/", "", html_entity_decode($email_template_name, ENT_QUOTES));
+          
           $user_ID = get_current_user_id();
           $user_info = get_userdata($user_ID);
     
@@ -1963,6 +2055,8 @@ function updateadminemailtemplate($data_array,$email_template_name){
       $sponsor_info[$email_template_name]['emailsubject'] = $data_array['emailsubject'];
       $sponsor_info[$email_template_name]['emailboday'] = stripslashes($data_array['emailboday']);
       $sponsor_info[$email_template_name]['BCC'] = $data_array['BCC'];
+     // $sponsor_info[$email_template_name]['CC'] = $data_array['CC'];
+      $sponsor_info[$email_template_name]['RTO'] = $data_array['RTO'];
       $sponsor_info[$email_template_name]['fromname'] = $data_array['fromname'];
    
       update_option($settitng_key, $sponsor_info);
@@ -4330,8 +4424,9 @@ class PageTemplater {
                         'temp/admin_landing_page_multisite_template.php'=>'Multi site Landing Page',
                         'temp/egpl_default_page_template.php'=>'EGPL Default Template',
                         'temp/egpl_login.php'=>'Users Login',
-                        'temp/egpl_resources_template.php'=>'Resources'
-                        
+                        'temp/egpl_resources_template.php'=>'Resources',
+                        'temp/updateusersprefix.php'=>'Update User Meta'
+                       
                         
                      
                    
@@ -4638,7 +4733,21 @@ global $wpdb;
 }
 
 function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename=''){
-        global $wpdb, $wp_hasher;
+    
+    require_once('../../../wp-load.php');
+    require_once 'Mandrill.php';
+    
+    
+ try {
+
+    global $wpdb, $wp_hasher;
+    $site_prefix = $wpdb->get_blog_prefix();
+    $oldvalues = get_option( 'ContenteManager_Settings' );
+    $mandrill = $oldvalues['ContentManager']['mandrill'];
+    $mandrill = new Mandrill($mandrill);
+    
+    
+    
         $user = get_userdata($user_id);
         
         if(empty($userlogin)){
@@ -4657,8 +4766,7 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
             
         }
         
-        
-        $plaintext_pass=wp_generate_password( 8, false, false );
+      $plaintext_pass=wp_generate_password( 8, false, false );
         wp_set_password( $plaintext_pass, $user_id );
         
         $settitng_key='AR_Contentmanager_Email_Template_welcome';
@@ -4670,109 +4778,212 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
         $oldvalues = get_option( 'ContenteManager_Settings' );
         $formemail = $oldvalues['ContentManager']['formemail'];
         if(empty($formemail)){
-            $formemail = 'noreply@convospark.com';
+            $formemail = 'noreply@expo-genie.com';
         
+        }
+        
+       
+      
+        $formemail = $oldvalues['ContentManager']['formemail'];
+        $fromname = stripslashes ($sponsor_info[$welcomeemailtemplatename]['fromname']);
+        if(empty($formemail)){
+
+            $formemail = 'noreply@expo-genie.com';
+
         }
         
         $subject = $sponsor_info[$welcomeemailtemplatename]['welcomesubject'];
 	$bcc =  $sponsor_info[$welcomeemailtemplatename]['BCC'];
-	$headers []= 'From: '.$sponsor_info[$welcomeemailtemplatename]['fromname'].' <'.$formemail.'>' . "\r\n";
-        $headers []= 'Reply-To: '.$sponsor_info[$welcomeemailtemplatename]['replaytoemailadd'];
-        $headers []= 'Bcc:'.$bcc;
+       // $cc =  $sponsor_info[$welcomeemailtemplatename]['CC'];
+	$formname = $sponsor_info[$welcomeemailtemplatename]['fromname'];
+        $replaytoemailadd = $sponsor_info[$welcomeemailtemplatename]['replaytoemailadd'];
+        $bcc_array = $bcc;
+      //  $cc_array = explode(',',$cc);
         
-        $key = wp_generate_password( 20, false );
+       
 
-	/** This action is documented in wp-login.php */
-	do_action( 'retrieve_password_key', $user->user_login, $key );
+    $subject = $sponsor_info[$welcomeemailtemplatename]['welcomesubject'];
+    $body=stripslashes ($sponsor_info[$welcomeemailtemplatename]['welcomeboday']);
+   
+    $user_ID = get_current_user_id();
+    $user_info = get_userdata($user_ID);
+    
+    $field_key_string = getInbetweenStrings('{', '}', $body);
+   
+  
+    $site_url = get_option('siteurl' );
 
-	// Now insert the key, hashed, into the DB.
-	if ( empty( $wp_hasher ) ) {
-		require_once ABSPATH . WPINC . '/class-phpass.php';
-		$wp_hasher = new PasswordHash( 8, true );
-	}
-	$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-	$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
-        $create_rest_password_link .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
-        
-        
-        $message=$sponsor_info[$welcomeemailtemplatename]['welcomeboday'];
-         
-         $subject_body = $subject ; 
-         $body_message =stripslashes ($message) ;
-         
-         $field_key_string = getInbetweenStrings('{', '}', $body_message);
-          foreach($field_key_string as $index=>$keyvalue){
-             
-             if($keyvalue == 'user_login' ||$keyvalue == 'date' || $keyvalue == 'issues_passes' || $keyvalue == 'create_password_url' || $keyvalue == 'time'|| $keyvalue == 'user_pass'|| $keyvalue == 'site_url'|| $keyvalue == 'site_title'){
-                 
-             }else if($keyvalue == "role" ){
-                 
+    $login_url = get_option('siteurl' );
+    $admin_email= get_option('admin_email');
+    $data=  date("Y-m-d");
+    $time=  date('H:i:s');
+    $sitetitle = get_bloginfo( 'name' );
+    if(empty($fromname)){
+        $fromname = get_bloginfo( 'name' );
+    }
+   // $body = str_replace('[site_url]', $site_url, $body);
+   // $body = str_replace('[login_url]', $site_url, $body);
+   // $body = str_replace('[admin_email]', $admin_email, $body);
+    $subject = str_replace('{', '*|', $subject);
+    $subject = str_replace('}', '|*', $subject);
+    $body = str_replace('{', '*|', $body);
+    $body = str_replace('}', '|*', $body);
+    
+    
+
+    $goble_data_array =array(
+        array('name'=>'date','content'=>$data),
+        array('name'=>'time','content'=>$time),
+        array('name'=>'site_url','content'=>$site_url),
+        array('name'=>'site_title','content'=>$sitetitle)
+        );
+
+  
+
+       
+       $data_field_array= array();
+       $t=time();
+       update_user_option($user_id, 'convo_welcomeemail_datetime', $t*1000);
+       foreach($field_key_string as $index=>$keyvalue){
+
+                      if($keyvalue == 'role' || $keyvalue == 'site_title' || $keyvalue == 'date' || $keyvalue == 'time' || $keyvalue == 'site_url' || $keyvalue == 'user_pass'|| $keyvalue == 'user_login'){
+
+
+                      if($keyvalue == 'user_pass'){
+
+
+                            
+                            $plaintext_pass=wp_generate_password( 8, false, false );
+                            wp_set_password( $plaintext_pass, $user_id );
+                            $data_field_array[] = array('name'=>$keyvalue,'content'=>$plaintext_pass);
+
+                      }else if($keyvalue == 'user_login'){
+
+                          $data_field_array[] = array('name'=>$keyvalue,'content'=>$user->user_login);
+                      }else if($keyvalue == 'role'){
+
+                         
+                          $getcurrentuserdata = get_userdata( $user_id );
                           $blog_id = get_current_blog_id();
                           $get_all_roles_array = 'wp_'.$blog_id.'_user_roles';
                           $get_all_roles = get_option($get_all_roles_array);
                           foreach ($get_all_roles as $key => $name) {
-                              
-                              if(implode(', ', $user->roles) == $key){
-                                  
-                                  $currenturerRole = $name['name'];
-                                  
-                                  
+
+                              if(implode(', ', $getcurrentuserdata->roles) == $key){
+
+                                  $currentuserRole = $name['name'];
+
+
                               }
-                              
-                              
-                              
+
+
+
                           }
-                          
-                          
-                          
-                 
-                 $body_message = str_replace('{'.$keyvalue.'}', $currenturerRole, $body_message);
-                 
-             }else{
-                 
-                 $get_meta_value = get_user_meta_merger_field_value($user_id,$keyvalue);
-                 $body_message = str_replace('{'.$keyvalue.'}', $get_meta_value, $body_message);
-                 $subject_body = str_replace('{'.$keyvalue.'}', $get_meta_value, $subject_body);
+
+
+                          $data_field_array[] = array('name'=>$keyvalue,'content'=>$currentuserRole);
+                      }
+
+
+
+                   }else{
+
+
+                       $get_meta_value = get_user_meta_merger_field_value($user_id,$keyvalue);
+                    if(!empty($get_meta_value)){
+
+                     
+                             
+                       $data_field_array[] = array('name'=>$keyvalue,'content'=>$get_meta_value);
+                             
+                        
+                       
+                   }else{
+                       
+                       $data_field_array[] = array('name'=>$keyvalue,'content'=>'');
+                   }
+
+
+
+
+                  }
+
+
+
              }
-             
-         }
-         
-        $body_message = str_replace('{issues_passes}', $pass_code_array_list, $body_message);
-        $body_message = str_replace('{user_login}', $user_login, $body_message);
-        $body_message = str_replace('{user_pass}', $plaintext_pass, $body_message);
-        $body_message = str_replace('{date}', $data, $body_message);
-        $body_message = str_replace('{time}', $time, $body_message);
-        $body_message = str_replace('{site_url}', $site_url, $body_message);
-        $body_message = str_replace('{site_title}', $site_title, $body_message);
-        $body_message = str_replace('{create_password_url}', $create_rest_password_link, $body_message);
-         
-         
-        $subject_body = str_replace('{user_login}', $user_login, $subject_body);
-        $subject_body = str_replace('{user_pass}', $plaintext_pass, $subject_body);
-        $subject_body = str_replace('{date}', $data, $subject_body);
-        $subject_body = str_replace('{time}', $time, $subject_body);
-        $subject_body = str_replace('{site_url}', $site_url, $subject_body);
-        $subject_body = str_replace('{site_title}', $site_title, $subject_body);
-        
-        
-        
-        
+       $to_message_array[]=array('email'=>$user_email,'name'=>$first_name,'type'=>'to');
+           $user_data_array[] =array(
+                'rcpt'=>$user_email,
+                'vars'=>$data_field_array
+           );
+
+       
+
+
+       //$result = send_email($to,$subject,$body_message);
+
+//        if(sizeof($bcc_array) > 1){
+//
+//            foreach ($bcc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'bcc');
+//                $user_data_array[] =array(
+//                'rcpt'=>$value,
+//                'vars'=>$data_field_array
+//                );
+//            }
+//        }else{
+//
+//            if(!empty($bcc_array)){
+//
+//                $to_message_array[]=array('email'=>$bcc_array[0],'name'=>'','type'=>'bcc');
+//                $user_data_array[] =array(
+//                'rcpt'=>$bcc_array[0],
+//                'vars'=>$data_field_array
+//                );
+//            }
+//        }
+//        if(sizeof($cc_array) > 1){
+//
+//            foreach ($cc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'cc');
+//                $user_data_array[] =array(
+//                'rcpt'=>$value,
+//                'vars'=>$data_field_array
+//                );
+//            }
+//        }else{
+//
+//            if(!empty($cc_array)){
+//
+//                $to_message_array[]=array('email'=>$cc_array[0],'name'=>'','type'=>'cc');
+//                $user_data_array[] =array(
+//                'rcpt'=>$cc_array[0],
+//                'vars'=>$data_field_array
+//                );
+//            }
+//        }
+
+
+
         
         $mainheaderbackground = $oldvalues['ContentManager']['mainheader'];
         $mainheaderlogo = $oldvalues['ContentManager']['mainheaderlogo'];
+        
+       
+        
         $logourl = '';
-        
+
         if(!empty($mainheaderlogo)){
-            
+
             $logourl = '<img style="margin-top: 16px;" src="'.$mainheaderlogo.'" alt="" width="250" />';
-        
+
         }else if(!empty($mainheaderbackground)){
-            
+
             $logourl = '<img style="margin-top: 16px;" src="'.$mainheaderbackground.'" alt="" height="100" />';
-        
-            
+
+
         }
-        
+
         $html_body_message = '<table width="600" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff">
 <tbody>
 <tr>
@@ -4790,7 +5001,7 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
 <tr>
 <td style="border-top: solid 1px #d9d9d9;" colspan="2">
 <div style="padding: 15px 0;">
-'.$body_message.'
+'.$body.'
 </div>
 </td>
 </tr>
@@ -4802,13 +5013,54 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
 </tbody>
 </table>
 <p>&nbsp;</p>';
+
+
+       
         
         
+   $message = array(
+
+        'html' => $html_body_message,
+        'text' => '',
+        'subject' => $subject,
+        'from_email' => $formemail,
+        'from_name' => $fromname,
+        'to' => $to_message_array,
+        'headers' => array('Reply-To' => $replaytoemailadd),
+        'bcc_address'=>$bcc_array,
+        'track_opens' => true,
+        'track_clicks' => true,
          
-        add_filter( 'wp_mail_content_type', 'set_html_content_type_utf8' );
-        wp_mail($user_email, $subject_body, $html_body_message,$headers);
-        remove_filter( 'wp_mail_content_type', 'set_html_content_type_utf8' );
-      
+        'merge' => true,
+        'merge_language' => 'mailchimp',
+        'global_merge_vars' => $goble_data_array,
+        'merge_vars' => $user_data_array
+
+
+    );
+
+    // exit;
+
+    $lastInsertId = contentmanagerlogging('Welcome Email',"Admin Action",serialize($message),$user_id,$user_info->user_email,"pre_action_data");
+
+    $async = false;
+    $ip_pool = 'Main Pool';
+   // $send_at = 'example send_at';
+    $result = $mandrill->messages->send($message, $async, $ip_pool, $send_at);
+    contentmanagerlogging_file_upload($lastInsertId,serialize($result));
+   
+
+
+}catch(Mandrill_Error $e) {
+    // Mandrill errors are thrown as exceptions
+    $error_msg = 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
+    // A mandrill error occurred: Mandrill_Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+
+
+    contentmanagerlogging_file_upload($lastInsertId,$error_msg);
+     echo   $e->getMessage();
+    //throw $e;
+}
     
 }
 
@@ -5329,10 +5581,13 @@ try {
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $formemail = $oldvalues['ContentManager']['formemail'];
     if(empty($formemail)){
-        $formemail = 'noreply@convospark.com';
+        $formemail = 'noreply@expo-genie.com';
         
     }
     $bcc = $sponsor_info[$selectwelcomeemailtempname]['BCC'];
+    //$cc = $sponsor_info[$selectwelcomeemailtempname]['CC'];
+    $bcc_array = $bcc;
+    //$cc_array = explode(',',$cc);
    
    
     $site_url = get_option('siteurl' );
@@ -5406,6 +5661,31 @@ try {
 <p>&nbsp;</p>'; 
     
    $body_message =    $body ;
+//   if(sizeof($bcc_array) > 1){
+//       
+//            foreach ($bcc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'bcc');
+//            }
+//        }else{
+//       
+//            if(!empty($bcc_array)){
+//
+//                $to_message_array[]=array('email'=>$bcc_array[0],'name'=>'','type'=>'bcc');
+//            }
+//        }
+//   if(sizeof($cc_array) > 1){
+//       
+//            foreach ($cc_array as $key => $value) {
+//                $to_message_array[] = array('email' => $value, 'name' => '', 'type' => 'cc');
+//            }
+//        }else{
+//       
+//            if(!empty($cc_array)){
+//
+//                $to_message_array[]=array('email'=>$cc_array[0],'name'=>'','type'=>'cc');
+//            }
+//        }
+   
    $message = array(
         
         'html' => $html_body_message,
@@ -5415,10 +5695,10 @@ try {
         'from_name' => $formname,
         'to' => $to_message_array,
         'headers' => array('Reply-To' => $replay_to),
-        
+        'bcc_address'=>$bcc_array,
         'track_opens' => true,
         'track_clicks' => true,
-        'bcc_address' => $bcc,
+        
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,

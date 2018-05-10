@@ -44,7 +44,16 @@ function get_bulk_email_address() {
 }
 
 function bulkemail_preview(){
-    
+    var checkbccstatus = checkemailstatus();
+    if(checkbccstatus ==  false){
+            swal({
+                    title: "Error",
+                    text: "Please input only one and valid email address in BCC field. Multiple emails are not allowed.",
+                    type: "error",
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Ok"
+                });
+    }else{
      var emailSubject =jQuery('#emailsubject').val();
      var emailBody=tinymce.activeEditor.getContent();//jQuery('#bodytext').val();
      
@@ -90,7 +99,7 @@ function bulkemail_preview(){
                                     
     // jAlert( 'Subject : ' +emailSubject+ '<hr>'+
             // emailBody+'<hr><p style="text-align: center;margin-right: 56px;"><a  class="btn btn-danger" id="popup_ok" onclick="conform_send_bulk_email()">Send</a><a id="popup_okk" class="btn btn-info" style="margin-left: 20px;">Cancel</a></p>'); 
-    
+        }
     
     
 }
@@ -138,6 +147,8 @@ function conform_send_bulk_email(){
          }
    
     var BCC=jQuery('#BCC').val();
+//    var CC=jQuery('#CC').val();
+    var RTO=jQuery('#replaytoemailadd').val();
     var fromname=jQuery('#fromname').val();
      var statusmessage='';
      var alertclass='';
@@ -154,6 +165,8 @@ function conform_send_bulk_email(){
     data.append('attendeeallfields',   JSON.stringify(arrData));
     data.append('datacollist',   JSON.stringify(columnheaderdataarray));
      data.append('BCC', BCC);
+     //data.append('CC', CC);
+     data.append('RTO', RTO);
      jQuery.ajax({
             url: urlnew,
             data: data,
@@ -277,6 +290,8 @@ function templateupdatefilter(){
        
        if(dropdownvalue != "saveCurrentEmailtemplate"){
           
+          
+            console.log(dropdownvalue);
             jQuery("#emailtemplate").val(dropdownvalue);
             var url = currentsiteurl+'/';
             var urlnew = url + 'wp-content/plugins/EGPL/egpl.php?contentManagerRequest=get_email_template';
@@ -302,6 +317,8 @@ function templateupdatefilter(){
                // jQuery("#bodytext").val();
                  jQuery("#bodytext").val(emailtemplatenamelist.emailboday);
                  tinymce.activeEditor.setContent(emailtemplatenamelist.emailboday);
+                 jQuery("#CC").val(emailtemplatenamelist.CC);
+                 jQuery("#replaytoemailadd").val(emailtemplatenamelist.RTO);
                  jQuery("#BCC").val(emailtemplatenamelist.BCC);
                  jQuery("#fromname").val(emailtemplatenamelist.fromname);
                  
@@ -337,6 +354,18 @@ function templateupdatefilter(){
 
 function update_admin_email_template(){
     
+    
+    var checkbccstatus = checkemailstatus();
+    if(checkbccstatus ==  false){
+            swal({
+                    title: "Error",
+                    text: "Please input only one and valid email address in BCC field. Multiple emails are not allowed.",
+                    type: "error",
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Ok"
+                });
+    }else{
+    
     var url = currentsiteurl+'/'; 
     var urlnew = url + 'wp-content/plugins/EGPL/egpl.php?contentManagerRequest=update_admin_email_template';
      var data = new FormData();
@@ -348,6 +377,8 @@ function update_admin_email_template(){
      var emailsubject = jQuery("#emailsubject").val();
      var emailboday =  tinymce.activeEditor.getContent();//jQuery("#bodytext").val();
      var BCC =      jQuery("#BCC").val();
+//     var CC =      jQuery("#CC").val();
+     var RTO =      jQuery("#replaytoemailadd").val();
      //console.log(emailboday);
      
      
@@ -357,6 +388,8 @@ function update_admin_email_template(){
      data.append('emailsubject', emailsubject);
      data.append('emailboday', emailboday);
      data.append('BCC', BCC);
+    // data.append('CC', CC);
+     data.append('RTO', RTO);
      data.append('fromname', fromname);
     
        
@@ -414,7 +447,7 @@ function update_admin_email_template(){
                 
             }});
     
-    
+    }
     
 }
 function removeemailtemplate(){
@@ -1279,6 +1312,7 @@ function old_back_report(){
 }
 
 function old_bulkemail_preview(){
+     
     
      var emailSubject =jQuery('#emailsubject').val();
      var emailBody=tinymce.activeEditor.getContent();//jQuery('#bodytext').val();

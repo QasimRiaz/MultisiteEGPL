@@ -4,6 +4,13 @@ jQuery.noConflict();
  
     
 jQuery(document).ready(function() { 
+    
+    
+    
+    
+
+
+
 jQuery('#checknewuserdiv').on( "click", function() {
     
     if(jQuery("#checknewuser").is(':checked')) {
@@ -53,7 +60,19 @@ function loadmultiwelcomeemailtemplate(){
 }
 
 function multi_welcomeemail_save_template(){
-     jQuery("body").css({'cursor':'wait'});
+    
+    var checkbccstatus = checkemailstatus();
+    if(checkbccstatus ==  false){
+            swal({
+                    title: "Error",
+                    text: "Please input only one and valid email address in BCC field. Multiple emails are not allowed.",
+                    type: "error",
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Ok"
+                });
+    }else{
+    
+    jQuery("body").css({'cursor':'wait'});
     var url = currentsiteurl+'/';
     var welcomeemailtemplatename = jQuery('#welcomeemailtemplatename').val();
     
@@ -64,7 +83,8 @@ function multi_welcomeemail_save_template(){
     var welcomeemailfromname =jQuery('#welcomeemailfromname').val();
     var replaytoemailadd=jQuery('#replaytoemailadd').val();
     var BCC=jQuery('#BCC').val();
-    
+   // var CC=jQuery('#CC').val();
+ 
     if(emailSubject !="" && emailBody !="" && welcomeemailfromname !="" ){
         
         var urlnew = url + 'wp-content/plugins/EGPL/userreport.php?contentManagerRequest=multitemplatewelcomeemail';
@@ -74,6 +94,7 @@ function multi_welcomeemail_save_template(){
         data.append('emailBody', emailBody);
         data.append('replaytoemailadd', replaytoemailadd);
         data.append('BCC', BCC);
+       // data.append('CC', CC);
         data.append('welcomeemailfromname', welcomeemailfromname);
         jQuery.ajax({
             url: urlnew,
@@ -120,7 +141,7 @@ function multi_welcomeemail_save_template(){
     }
     
     
-    
+    }  
     
 }
 
@@ -212,4 +233,28 @@ function conform_multiemail_template_delete(){
 				});
       }
         });
+}
+
+function checkemailstatus(){
+    
+    
+    
+    var email = jQuery('#BCC').val();
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/igm;
+    if (re.test(email)) {
+        
+        return true;
+        
+    } else {
+        
+        return false;
+        
+    }
+
+
+    
+    
+    
+    
+    
 }

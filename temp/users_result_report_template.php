@@ -238,7 +238,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="faq-page-cat" title="Compose and send a bulk email message to the currently selected users">
+                                    <div class="faq-page-cat" >
                                         <div class="faq-page-cat-icon"><i class="bulkbtuton reporticon font-icon fa fa-users fa-2x"></i></div>
 
                                         <div class="faq-page-cat-txt">
@@ -354,7 +354,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
 							</div>
 						</div>-->
 						<div class="col-md-4">
-							<div class="faq-page-cat" title="Compose and send a bulk email message to the currently selected users">
+							<div class="faq-page-cat" >
 								
 								
 								<div class="faq-page-cat-txt">
@@ -388,7 +388,16 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                     </div>
                                 </div>
                                
-                                
+                                <div class="form-group row">
+                                        <label class="col-sm-2 form-control-label">Reply-To <i style="cursor: pointer;" title = 'Please input an email address. When the recipient hits Reply on the message, this email address will be selected to receive their reply.' class="reporticon font-icon fa fa-question-circle"></i></label>
+                                        <div class="col-sm-10">
+                                            <div class="form-control-wrapper form-control-icon-left">    
+                                                <input type="text"  class="form-control" id="replaytoemailadd" placeholder="Reply To Email address" value="<?php echo $sponsor_info[$loadreportname]['replaytoemailadd']; ?>" >
+                                                <i class="fa fa-mail-reply"></i>	
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 
                                 
                                 <div class="form-group row">
@@ -401,6 +410,16 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                         
                                     </div>
                                 </div>
+<!--                                <div class="form-group row">
+                                    <label class="col-sm-2 form-control-label">CC <i style="cursor: pointer;" title='Please input one or multiple email address (comma separated). All outgoing Welcome emails will be carbon copied to these address(es).'class="reporticon font-icon fa fa-question-circle"></i></label>
+                                    <div class="col-sm-10">
+                                            <div class="form-control-wrapper form-control-icon-left">
+								<input type="text"  class="form-control" id="CC" placeholder="CC" >
+								<i class="font-icon fa fa-copy"></i>
+							</div>
+                                        
+                                    </div>
+                                </div>-->
                                 <div class="form-group row">
                                     <label class="col-sm-2 form-control-label">Subject <strong>*</strong></label>
                                     <div class="col-sm-10">
