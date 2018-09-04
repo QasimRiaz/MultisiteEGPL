@@ -26,6 +26,21 @@ function updatecontentsettings() {
    var addresspoints = jQuery("#addresspoints").val();
    var userreportcontent = jQuery("#userreportcontent").val();
    var expogeniefloorplan = jQuery("#expogeniefloorplan").val();
+   
+   var cventaccountname = jQuery("#cventaccountname").val();
+   var cventusername = jQuery("#cventusername").val();
+   var cventapipassword = jQuery("#cventapipassword").val();
+   var customfieldstatus = "";
+    if (jQuery("#customfieldstatus").prop('checked') == true){ 
+        
+         customfieldstatus = 'checked';
+         
+    }else{
+        
+         customfieldstatus = '';
+    }
+   
+   
    var uploadlogourl = jQuery("#uploadlogourl").attr("src");
    if(uploadlogourl == ''){
        
@@ -55,6 +70,13 @@ function updatecontentsettings() {
        data.append('selfsignstatus', selfsignstatus);
        data.append('userreportcontent', userreportcontent);
        data.append('expogeniefloorplan', expogeniefloorplan);
+       
+       
+       data.append('cventaccountname', cventaccountname);
+       data.append('cventusername', cventusername);
+       data.append('cventapipassword', cventapipassword);
+       data.append('customfieldstatus', customfieldstatus);
+     
      
 
        jQuery.ajax({
@@ -73,7 +95,7 @@ function updatecontentsettings() {
                     setTimeout(function() {
                         jQuery( "#successmsg" ).empty();
                         jQuery( "#successmsg" ).hide();
-                        location.reload();
+                        //location.reload();
                         }, 2000);
                         
 

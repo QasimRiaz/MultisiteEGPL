@@ -1,37 +1,150 @@
 <?php
+                    
 
-                $user_additional_field[0]['name'] = 'Prefix';
-                $user_additional_field[0]['key']  = 'prefix';
+                
+                $cventmappingarray['task_company_name_for_print_463cz']['name'] = 'Company Name';
+                $cventmappingarray['task_company_name_for_print_463cz']['taskkey'] = 'task_company_name_for_print_463cz';
+                $cventmappingarray['task_company_name_for_print_463cz']['id'] = 'B812EE46-28BA-4DAA-A6ED-659E6B9E7060';
+                $cventmappingarray['task_company_name_for_print_463cz']['type'] = 'custome';
+                
+                
+                $cventmappingarray['task_hotel_name_for_cvent_0qvib']['name'] = 'Hotel Name';
+                $cventmappingarray['task_hotel_name_for_cvent_0qvib']['taskkey'] = 'task_hotel_name_for_cvent_0qvib';
+                $cventmappingarray['task_hotel_name_for_cvent_0qvib']['id'] = '0BC3151F-34CB-4255-A183-4D8B00B538AF';
+                $cventmappingarray['task_hotel_name_for_cvent_0qvib']['type'] = 'custome';
+                
 
-                $user_additional_field[1]['name'] = 'Address 1';
-                $user_additional_field[1]['key']  = 'address_line_1';
 
-                $user_additional_field[2]['name'] = 'Address 2';
-                $user_additional_field[2]['key']  = 'address_line_2';
+                $user_additional_field['contactStub']['name'] = 'Cvent ID';
+                $user_additional_field['contactStub']['formlabel'] = 'Cvent ID';
+                $user_additional_field['contactStub']['key']  = 'contactStub';
+                $user_additional_field['contactStub']['type'] = 'text';
+                $user_additional_field['contactStub']['hiddenflag'] = false;
+                $user_additional_field['contactStub']['required'] = false;
+               
+                
+                $user_additional_field['confirmationNumber']['name'] = 'Confirmation Number';
+                $user_additional_field['confirmationNumber']['formlabel'] = 'Confirmation Number';
+                $user_additional_field['confirmationNumber']['key']  = 'confirmationNumber';
+                $user_additional_field['confirmationNumber']['type'] = 'text';
+                $user_additional_field['confirmationNumber']['hiddenflag'] = false;
+                $user_additional_field['confirmationNumber']['required'] = false;
+                
+                $user_additional_field['inviteeStub']['name'] = 'Invitee Number';
+                $user_additional_field['inviteeStub']['formlabel'] = 'Invitee Number';
+                $user_additional_field['inviteeStub']['key']  = 'inviteeStub';
+                $user_additional_field['inviteeStub']['type'] = 'text';
+                $user_additional_field['inviteeStub']['hiddenflag'] = false;
+                $user_additional_field['inviteeStub']['required'] = false;
+                
+               
+                $user_additional_field['cventinviteeurl']['name'] = 'Event Summary URL';
+                $user_additional_field['cventinviteeurl']['formlabel'] = 'Event Summary URL';
+                $user_additional_field['cventinviteeurl']['key']  = 'cventinviteeurl';
+                $user_additional_field['cventinviteeurl']['type'] = 'text';
+                $user_additional_field['cventinviteeurl']['hiddenflag'] = false;
+                $user_additional_field['cventinviteeurl']['required'] = false;
+                
+                    
+                    
+                        $user_additional_field_default[0]['name'] = 'Prefix';
+                        $user_additional_field_default[0]['key']  = 'prefix';
+                        $user_additional_field_default[0]['type'] = 'text';
+                        $user_additional_field_default[0]['hiddenflag'] = false;
+                        $user_additional_field_default[0]['formlabel'] = 'Prefix';
+                        $user_additional_field_default[0]['required'] = false;
+               
+                
+                        $user_additional_field_default[1]['name'] = 'Address 1';
+                        $user_additional_field_default[1]['key']  = 'address_line_1';
+                        
+                       	$user_additional_field_default[1]['type'] = 'text';
+                        $user_additional_field_default[1]['hiddenflag'] = false;
+                        $user_additional_field_default[1]['formlabel'] = 'Address 1';
+                        $user_additional_field_default[1]['required'] = false;
 
-                $user_additional_field[3]['name'] = 'City';
-                $user_additional_field[3]['key']  = 'usercity';
+                        $user_additional_field_default[2]['name'] = 'Address 2';
+                        $user_additional_field_default[2]['key']  = 'address_line_2';
+                        
+                        $user_additional_field_default[2]['type'] = 'text';
+                        $user_additional_field_default[2]['hiddenflag'] = false;
+                        $user_additional_field_default[2]['formlabel'] = 'Address 2';
+                        $user_additional_field_default[2]['required'] = false;
 
-                $user_additional_field[4]['name'] = 'State';
-                $user_additional_field[4]['key']  = 'userstate';
+                        $user_additional_field_default[3]['name'] = 'City';
+                        $user_additional_field_default[3]['key']  = 'usercity';
+                        
+                        $user_additional_field_default[3]['type'] = 'text';
+                        $user_additional_field_default[3]['hiddenflag'] = false;
+                        $user_additional_field_default[3]['formlabel'] = 'City';
+                        $user_additional_field_default[3]['required'] = false;
 
-                $user_additional_field[5]['name'] = 'Zipcode';
-                $user_additional_field[5]['key']  = 'userzipcode';
+                        $user_additional_field_default[4]['name'] = 'State';
+                        $user_additional_field_default[4]['key']  = 'userstate';
+                        
+                        $user_additional_field_default[4]['type'] = 'text';
+                        $user_additional_field_default[4]['hiddenflag'] = false;
+                        $user_additional_field_default[4]['formlabel'] = 'State';
+                        $user_additional_field_default[4]['required'] = false;
 
-                $user_additional_field[6]['name'] = 'Country';
-                $user_additional_field[6]['key']  = 'usercountry';
+                        $user_additional_field_default[5]['name'] = 'Zipcode';
+                        $user_additional_field_default[5]['key']  = 'userzipcode';
+                        
+                        $user_additional_field_default[5]['type'] = 'text';
+                        $user_additional_field_default[5]['hiddenflag'] = false;
+                        $user_additional_field_default[5]['formlabel'] = 'Zipcode';
+                        $user_additional_field_default[5]['required'] = false;
 
-                $user_additional_field[7]['name'] = 'Phone 1';
-                $user_additional_field[7]['key']  = 'user_phone_1';
+                        $user_additional_field_default[6]['name'] = 'Country';
+                        $user_additional_field_default[6]['key']  = 'usercountry';
+                        
+                        $user_additional_field_default[6]['type'] = 'text';
+                        $user_additional_field_default[6]['hiddenflag'] = false;
+                        $user_additional_field_default[6]['formlabel'] = 'Country';
+                        $user_additional_field_default[6]['required'] = false;
 
-                $user_additional_field[8]['name'] = 'Phone 2';
-                $user_additional_field[8]['key']  = 'user_phone_2';
+                        $user_additional_field_default[7]['name'] = 'Phone 1';
+                        $user_additional_field_default[7]['key']  = 'user_phone_1';
+                        
+                        $user_additional_field_default[7]['type'] = 'text';
+                        $user_additional_field_default[7]['hiddenflag'] = false;
+                        $user_additional_field_default[7]['formlabel'] = 'Phone 1';
+                        $user_additional_field_default[7]['required'] = false;
 
-                $user_additional_field[9]['name'] = 'Registration Codes';
-                $user_additional_field[9]['key']  = 'reg_codes';
+                        $user_additional_field_default[8]['name'] = 'Phone 2';
+                        $user_additional_field_default[8]['key']  = 'user_phone_2';
+                        
+                        $user_additional_field_default[8]['type'] = 'text';
+                        $user_additional_field_default[8]['hiddenflag'] = false;
+                        $user_additional_field_default[8]['formlabel'] = 'Phone 2';
+                        $user_additional_field_default[8]['required'] = false;
 
-                $user_additional_field[10]['name'] = 'Notes';
-                $user_additional_field[10]['key']  = 'usernotes';
+                        $user_additional_field_default[9]['name'] = 'Registration Codes';
+                        $user_additional_field_default[9]['key']  = 'reg_codes';
+                        
+                        $user_additional_field_default[9]['type'] = 'text';
+                        $user_additional_field_default[9]['hiddenflag'] = false;
+                        $user_additional_field_default[9]['formlabel'] = 'Registration Codes';
+                        $user_additional_field_default[9]['required'] = false;
+
+                        $user_additional_field_default[10]['name'] = 'Notes';
+                        $user_additional_field_default[10]['key']  = 'usernotes';
+                        
+                        $user_additional_field_default[10]['type'] = 'textarea';
+                        $user_additional_field_default[10]['hiddenflag'] = false;
+                        $user_additional_field_default[10]['formlabel'] = 'Notes';
+                        $user_additional_field_default[10]['required'] = false;
+                
+                
+                    
+                    
+                    
+                
+               
+              
+                
+                
+
                 
                 
                 $task_input_type[0]['lable'] = 'None';
@@ -62,7 +175,7 @@
                 $create_pages_list[0]['title'] = 'New User';
                 $create_pages_list[0]['name']  = 'create-user';
                 $create_pages_list[0]['temp']  = 'temp/addsponsor-template.php';
-                $create_pages_list[30]['catname']  = false;
+                $create_pages_list[0]['catname']  = false;
                 
                 $create_pages_list[1]['title'] = 'Create Resources';
                 $create_pages_list[1]['name']  = 'create-resource';

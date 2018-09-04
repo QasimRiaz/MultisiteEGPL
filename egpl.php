@@ -334,8 +334,9 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
     $keys_string[]= 'create_password_url';
     $keys_string[]= 'user_login';
     foreach ($additional_fields as $key=>$value){  
-        
+        if($additional_fields[$key]['type'] !='html'){
          $keys_string[] = $additional_fields[$key]['key'];
+        }
         
     }
    
@@ -3448,7 +3449,11 @@ function add_contentmanager_js(){
     // wp_enqueue_script('bulk-email', plugins_url('/js/bulk-email.js', __FILE__), array('jquery'));
      wp_enqueue_script('sweetalert', plugins_url('/EGPL/cmtemplate/js/lib/bootstrap-sweetalert/sweetalert.min.js'), array('jquery'));
      wp_enqueue_script('password_strength_cal', plugins_url('/js/passwordstrength.js', __FILE__), array('jquery'));
-     wp_enqueue_script('selfsignupjs', plugins_url('/js/selfsignupjs.js', __FILE__), array('jquery'));
+     
+     wp_enqueue_script( 'selfsignupjs', plugins_url('/EGPL/js/selfsignupjs.js'), array(), '1.2.7', true );
+      
+      
+     wp_enqueue_script('select2', plugins_url('/cmtemplate/js/lib/select2/select2.full.js', __FILE__), array('jquery'));
       //wp_enqueue_script('rolejs', plugins_url('/js/role.js', __FILE__), array('jquery'));
      
    
@@ -3462,6 +3467,7 @@ function my_contentmanager_style() {
     wp_enqueue_style('my-datepicker', plugins_url().'/EGPL/css/datepicker.css');
     wp_enqueue_style('jquery.dataTables', plugins_url().'/EGPL/css/jquery.dataTables.css');
     wp_enqueue_style('shCore', plugins_url().'/EGPL/css/shCore.css');
+    
    
   
     wp_enqueue_style('my-datatable-tools', plugins_url().'/EGPL/css/dataTables.tableTools.css');
@@ -3512,7 +3518,13 @@ if (is_multisite()) {
                     $get_all_roles['contentmanager']['name'] = 'Content Manager';
                     update_option($get_all_roles_array, $get_all_roles);
                 }
-
+                 
+           
+             
+                    
+                      $result = update_option('EGPL_Settings_Additionalfield', $user_additional_field);
+                  
+             
                 $test_task = 'custome_task_manager_data';
                 $manage_bulk_task = get_option($test_task);
                 if (empty($manage_bulk_task['profile_fields'])) {
@@ -3540,9 +3552,7 @@ if (is_multisite()) {
 
 
                 
-
-                update_option('EGPL_Settings_Additionalfield', $user_additional_field);
-                
+               
                 $term = term_exists('Content Manager Editor', 'category');
                 if ($term !== 0 && $term !== null) {
                     $cat_id_get = $term['term_id'];
@@ -4092,7 +4102,7 @@ add_action( 'init', 'add_contentmanager_settings' );
 
 function add_contentmanager_settings() {
     
-    wp_register_script('adminjs', plugins_url('js/admin-cmanager.js?v=2.28', __FILE__), array('jquery'));
+    wp_register_script('adminjs', plugins_url('js/admin-cmanager.js?v=2.31', __FILE__), array('jquery'));
     wp_enqueue_script('adminjs');
     //$settings_array['ContentManager']['sponsor-name']='Exhibitor';
     //update_option( 'ContenteManager_Settings', $settings_array);
@@ -4175,6 +4185,29 @@ function updatecmanagersettings($object_data){
     $oldvalues['ContentManager']['userreportcontent']=stripslashes($userreportcontent);
     
     
+    
+    $oldvalues['ContentManager']['cventaccountname']=$object_data['cventaccountname'];
+    $oldvalues['ContentManager']['cventusername']=$object_data['cventusername'];;
+    $oldvalues['ContentManager']['cventapipassword']=$object_data['cventapipassword'];;
+    $oldvalues['ContentManager']['customfieldstatus']=$object_data['customfieldstatus'];
+    
+    
+    
+    
+   if($object_data['customfieldstatus'] == 'checked'){
+       
+        include 'defult-content.php';
+        $result = update_option('EGPL_Settings_Additionalfield', $user_additional_field);
+       
+       
+   }else{
+      
+       include 'defult-content.php';
+       $result = update_option('EGPL_Settings_Additionalfield', $user_additional_field_default);
+       
+   }
+    
+    
     $oldvalues['ContentManager']['wooseceretkey']=$wooseceretkey;
     $oldvalues['ContentManager']['wooconsumerkey']=$wooconsumerkey;
     $oldvalues['ContentManager']['selfsignstatus']=$selfsignstatus;
@@ -4238,6 +4271,14 @@ function excludes_sponsor_meta(){
      $wooconsumerkey    =   $oldvalues['ContentManager']['wooconsumerkey'];
      $wooseceretkey     =   $oldvalues['ContentManager']['wooseceretkey'];
      $selfsignstatus    =   $oldvalues['ContentManager']['selfsignstatus'];
+     
+     $cventaccountname     =   $oldvalues['ContentManager']['cventaccountname'];
+     $cventusername        =   $oldvalues['ContentManager']['cventusername'];
+     $cventapipassword     =   $oldvalues['ContentManager']['cventapipassword'];
+     $customfieldstatus    =   $oldvalues['ContentManager']['customfieldstatus'];
+     
+     
+     
      $userreportcontent =   stripslashes($oldvalues['ContentManager']['userreportcontent']);
      $expogeniefloorplan    =   $oldvalues['ContentManager']['expogeniefloorplan'];
       
@@ -4257,7 +4298,7 @@ function excludes_sponsor_meta(){
      $header = '<p id="successmsg" style="display:none;background-color: #00F732;padding: 11px;margin-top: 20px;width: 300px;font-size: 18px;"></p><h4></h4>';
      $bodayContent.=$header;
      
-     $maincontent='<table style="">
+     $maincontent.='<table style="">
       
        <tr>
        <td><h4>Exclude Meta Fields For Create Sponsor Screen</h4></td>
@@ -4323,6 +4364,44 @@ function excludes_sponsor_meta(){
         <input type="text" name="wooseceretkey"  id="wooseceretkey" value='.$wooseceretkey.'>
         </td>
        </tr>
+       
+
+
+
+       <tr><td><h4>Cvent Account Name</h4></td>
+ 
+        <td><input type="text" name="cventaccountname"  id="cventaccountname" value='.$cventaccountname.'></td>
+       </tr>
+        <tr><td><h4>Cvent Username</h4></td>
+
+        <td>
+        <input type="text" name="cventusername"  id="cventusername" value='.$cventusername.'>
+        </td>
+       </tr>
+       <tr><td><h4>Cvent Api Password</h4></td>
+ 
+        <td><input type="text" name="cventapipassword"  id="cventapipassword" value='.$cventapipassword.'></td>
+       </tr>
+        <tr><td><h4>Additional Custome Field Status</h4></td>
+
+        <td>';
+        if($customfieldstatus == 'checked'){
+            
+            $maincontent.='<input type="checkbox"  id="customfieldstatus" name="vehicle" value="customfieldon" checked> Additioanl Custom Fields Enabled<br>';
+            
+        }else{
+            
+            $maincontent.='<input type="checkbox"  id="customfieldstatus" name="vehicle" value="customfieldon" > Additioanl Custom Fields Enabled<br>';
+             
+            
+        } 
+        
+
+        $maincontent.='</td>
+       </tr>
+
+
+
        <tr><td><h4>User Report bottom content</h4></td>
  
         <td><textarea style="width:300px;height:100px" id="userreportcontent" >'.$userreportcontent.'</textarea></td>
@@ -4443,7 +4522,8 @@ class PageTemplater {
                         'temp/egpl_default_page_template.php'=>'EGPL Default Template',
                         'temp/egpl_login.php'=>'Users Login',
                         'temp/egpl_resources_template.php'=>'Resources',
-                        'temp/updateusersprefix.php'=>'Update User Meta'
+                        'temp/updateusersprefix.php'=>'Update User Meta',
+                        'temp/syncuserscvent.php'=>'Cvent Sync Users'
                        
                         
                      
@@ -4705,7 +4785,7 @@ add_shortcode( 'customelogout', 'customelogout' );
 function contentmanagerlogging($acction_name,$action_type,$pre_action_data,$user_id,$email,$result){
 
     
-require_once('../../../wp-load.php');
+//require_once('../../../wp-load.php');
     
 global $wpdb;
 $blog_id =get_current_blog_id();
@@ -4724,7 +4804,7 @@ return $lastInsertId;
 function contentmanagerlogging_file_upload($lastInsertId,$result){
 
     
-require_once('../../../wp-load.php');
+//require_once('../../../wp-load.php');
     
 $blog_id =get_current_blog_id();
    if(get_current_blog_id() == 1){
@@ -4752,7 +4832,7 @@ global $wpdb;
 
 function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename=''){
     
-    require_once('../../../wp-load.php');
+//    require_once('../../../wp-load.php');
     require_once 'Mandrill.php';
     
     
@@ -6261,6 +6341,3 @@ function viewfloorplanbutton( $atts ){
       
 }
 add_shortcode( 'viewfloorplanbutton', 'viewfloorplanbutton' );
-
-
-
