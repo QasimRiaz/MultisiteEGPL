@@ -1,5 +1,10 @@
 <?php
 // Silence is golden.
+
+
+
+
+
    if (current_user_can('administrator') || current_user_can('contentmanager') ) {
        
   
