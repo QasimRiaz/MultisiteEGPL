@@ -1171,7 +1171,7 @@ try {
 </tr>
 </tbody>
 </table>
-<table id="content" style="margin-top: 15px; padding: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+<table id="content" style="padding-right: 30px;padding-left: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
 <tbody>
 <tr>
 <td style="border-top: solid 1px #d9d9d9;" colspan="2">
@@ -1636,7 +1636,7 @@ try {
 </tr>
 </tbody>
 </table>
-<table id="content" style="margin-top: 15px; padding: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+<table id="content" style="padding-right: 30px;padding-left: 30px;"  border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
 <tbody>
 <tr>
 <td style="border-top: solid 1px #d9d9d9;" colspan="2">
@@ -3444,11 +3444,11 @@ function add_contentmanager_js(){
      wp_enqueue_script('safari1', plugins_url('/js/modernizr.custom.js', __FILE__), array('jquery'));
      wp_enqueue_script('safari2', plugins_url('/js/classie.js', __FILE__), array('jquery'));
      wp_enqueue_script('safari3', plugins_url('/js/progressButton.js', __FILE__), array('jquery'));
-     wp_enqueue_script('confirm-jQuery', plugins_url('/js/jquery-confirm.js?v=1.2', __FILE__), array('jquery'));
+   
     // wp_enqueue_script('bulk-email', plugins_url('/js/bulk-email.js', __FILE__), array('jquery'));
      wp_enqueue_script('sweetalert', plugins_url('/EGPL/cmtemplate/js/lib/bootstrap-sweetalert/sweetalert.min.js'), array('jquery'));
      wp_enqueue_script('password_strength_cal', plugins_url('/js/passwordstrength.js', __FILE__), array('jquery'));
-     wp_enqueue_script( 'selfsignupjs2', plugins_url() . '/EGPL/js/selfsignupjs.js', array(), '1.9', true );
+     wp_enqueue_script('selfsignupjs', plugins_url('/js/selfsignupjs.js', __FILE__), array('jquery'));
       //wp_enqueue_script('rolejs', plugins_url('/js/role.js', __FILE__), array('jquery'));
      
    
@@ -3469,7 +3469,6 @@ function my_contentmanager_style() {
    // wp_enqueue_style('contentmanager-css', plugins_url() .'/EGPL/css/forntend.css');
     wp_enqueue_style('my-admin-theme1', plugins_url() .'/EGPL/css/component.css',array(), '1.1', 'all');
     wp_enqueue_style('my-admin-theme', plugins_url('css/normalize.css', __FILE__));
-     wp_enqueue_style('jQuery-confirm-css', plugins_url('css/jquery-confirm.css?v=1.3', __FILE__));
   
    
 }
@@ -5015,7 +5014,7 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
 </tr>
 </tbody>
 </table>
-<table id="content" style="margin-top: 15px; padding: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+<table id="content" style="padding-right: 30px;padding-left: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
 <tbody>
 <tr>
 <td style="border-top: solid 1px #d9d9d9;" colspan="2">
@@ -5469,15 +5468,15 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  $plaintext_pass=wp_generate_password( 8, false, false );
-                  wp_set_password( $plaintext_pass, $user_id );
-                  $status['userpass'] = $plaintext_pass;
-              
+                  
               
               }
               
             
               add_new_sponsor_metafields($user_id,$meta_array,$role);
+              $plaintext_pass=wp_generate_password( 8, false, false );
+              wp_set_password( $plaintext_pass, $user_id );
+              $status['userpass'] = $plaintext_pass;
               
               
             }
@@ -5521,16 +5520,15 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  $plaintext_pass=wp_generate_password( 8, false, false );
-                  wp_set_password( $plaintext_pass, $user_id );
-                  $status['userpass'] = $plaintext_pass;
-             
+                  
               
               }
               
               add_user_to_blog($currentblogid, $user_id, $role);
               add_new_sponsor_metafields($user_id,$meta_array,$role);
-              
+              $plaintext_pass=wp_generate_password( 8, false, false );
+              wp_set_password( $plaintext_pass, $user_id );
+              $status['userpass'] = $plaintext_pass;
               
             }    
             
@@ -5651,34 +5649,34 @@ try {
         }
         
         $html_body_message = '<table width="600" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff">
-<tbody>
-<tr>
-<td align="left">
-<div style="border: solid 1px #d9d9d9;">
-<table id="header" style="line-height: 1.6;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-<tbody>
-<tr>
-<td style="text-align: center;">'.$logourl.'</td>
-</tr>
-</tbody>
-</table>
-<table id="content" style="margin-top: 15px; padding: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-<tbody>
-<tr>
-<td style="border-top: solid 1px #d9d9d9;" colspan="2">
-<div style="padding: 15px 0;">
-'.$body.'
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<p>&nbsp;</p>'; 
+            <tbody>
+            <tr>
+            <td align="left">
+            <div style="border: solid 1px #d9d9d9;">
+            <table id="header" style="line-height: 1.6;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+            <tbody>
+            <tr>
+            <td style="text-align: center;">'.$logourl.'</td>
+            </tr>
+            </tbody>
+            </table>
+            <table id="content" style="padding-right: 30px;padding-left: 30px;" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+            <tbody>
+            <tr>
+            <td style="border-top: solid 1px #d9d9d9;" colspan="2">
+            <div style="padding: 15px 0;">
+            '.$body.'
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            <p>&nbsp;</p>'; 
     
    $body_message =    $body ;
 //   if(sizeof($bcc_array) > 1){

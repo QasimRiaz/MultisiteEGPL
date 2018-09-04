@@ -5,7 +5,7 @@
     $woocommerce_rest_api_keys = get_option( 'ContenteManager_Settings' );
     $wooconsumerkey = $woocommerce_rest_api_keys['ContentManager']['wooconsumerkey'];
     $wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey'];
-    include 'cm_header.php';
+   include 'cm_header.php';
     include 'cm_left_menu_bar.php';
 if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
     
@@ -25,8 +25,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
     $all_roles = $wp_roles->roles;
        $client = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
        $product_cat_list = $client->products->get_categories() ;
-       // echo '<pre>';
-          // print_r($product_cat_list);exit;
+      
        
        if(isset($_GET['producttype'])){
        
@@ -60,7 +59,8 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
          
            
        }
-       
+        // echo '<pre>';
+      //  print_r($update_product);exit;
        
                 ?>
         <div class="page-content">
@@ -310,8 +310,8 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                                $url = wp_get_attachment_thumb_url($update_product->product->images[0]->id);
                                ?>
                                 <div class="col-sm-5 productremoveimageblock">
-                                   <img src="<?php echo $update_product->product->featured_src; ?>" width="150" />
-                                    <input type="hidden" id="productoldimage" value="<?php echo $update_product->product->featured_src; ?>" />
+                                   <img src="<?php echo $update_product->product->images[0]->src; ?>" width="150" />
+                                    <input type="hidden" id="productoldimage" value="<?php echo $update_product->product->images[0]->id; ?>" />
                                 </div>
                                 <div class="col-sm-5 productremoveimageblock" style="margin-top: 5%;">
                                     <a   onclick="changeimage()" class="btn btn-lg btn-danger" >Change Image</a>

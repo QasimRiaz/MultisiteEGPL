@@ -594,8 +594,8 @@ function manageproducts() {
 
 function addnewproducts($addnewproduct_data) {
 
-    require_once('../../../wp-load.php');
-    require_once( 'temp/lib/woocommerce-api.php' );
+  //  require_once('../../../wp-load.php');
+   // require_once( 'temp/lib/woocommerce-api.php' );
    
     try {
 
@@ -606,16 +606,17 @@ function addnewproducts($addnewproduct_data) {
         $productimage=$_FILES['productimage'];
         $price = $addnewproduct_data['pprice'];
         $roleassign = $addnewproduct_data['roleassign'];
-         $url = get_site_url();
+        $url = get_site_url();
         
         
         if(!empty($productimage)){
-            $productpicrul = resource_file_upload($productimage);
-        
+            $productpicrul = product_file_upload($productimage);
+           
             
         }else{
                 
-            $productpicrul=$url."/wp-content/plugins/woocommerce/assets/images/placeholder.png";
+                $productpicrul = 0;
+                
         }
         
         if($addnewproduct_data['stockstatus'] == 'instock'){
@@ -634,12 +635,12 @@ function addnewproducts($addnewproduct_data) {
             'timeout' => 30,
             'ssl_verify' => false,
         );
-        $woocommerce_rest_api_keys = get_option( 'ContenteManager_Settings' );
-        $wooconsumerkey = $woocommerce_rest_api_keys['ContentManager']['wooconsumerkey'];
-        $wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey'];
-        $woocommerce_object = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
+        //$woocommerce_rest_api_keys = get_option( 'ContenteManager_Settings' );
+        //$wooconsumerkey = $woocommerce_rest_api_keys['ContentManager']['wooconsumerkey'];
+        //$wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey'];
+        //$woocommerce_object = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
        
-            $data = [
+           /* $data = [
                 'title' => $addnewproduct_data['ptitle'],
                 'manage_stock' => true,
                 'regular_price' => $price,
@@ -655,23 +656,48 @@ function addnewproducts($addnewproduct_data) {
                 'enable_html_description'=> true,
                 'enable_html_short_description'=> true,
                 'categories' => [$addnewproduct_data['pcategories']],
-                'images' => [
-                    [
-                        'src' => $productpicrul,
-                        'position' => 0
-                    ]
-                ]
-            ];
+                'images' => Array ( '0' => Array( 'src' => $productpicrul, 'title' => '21', 'position' => '0' ) )      
+        
+               
+            ];*/
+          
             
-           // echo 'test<pre>';
-           // print_r($woocommerce_object);
-           // print_r( $woocommerce_object->products->get() );
-          // $woocommerce_object->products->create( array( 'title' => 'Test Product', 'type' => 'simple', 'regular_price' => '9.99', 'description' => 'test' ) ) ;
-           $woocommerce_object->products->create($data);
-           // exit;
+        $objProduct = new WC_Product();
             
+        $objProduct->set_name($addnewproduct_data['ptitle']); //Set product name.
+        $objProduct->set_status($addnewproduct_data['pstatus']); //Set product status.
+        $objProduct->set_featured(TRUE); //Set if the product is featured.                          | bool
+        $objProduct->set_catalog_visibility('visible'); //Set catalog visibility.                   | string $visibility Options: 'hidden', 'visible', 'search' and 'catalog'.
+        $objProduct->set_description($addnewproduct_data['pdescrpition']); //Set product description.
+        $objProduct->set_short_description($addnewproduct_data['pshortdescrpition']); //Set product short description.
+       
+        $objProduct->set_price($price); //Set the product's active price.
+        $objProduct->set_regular_price($price); //Set the product's regular price.
+      
+       $objProduct->set_manage_stock(TRUE); //Set if product manage stock.                         | bool
+        $objProduct->set_stock_quantity($addnewproduct_data['pquanitity']); //Set number of items available for sale.
+        $objProduct->set_stock_status($instock); //Set stock status.                               | string $status 'instock', 'outofstock' and 'onbackorder'
+        $objProduct->set_backorders('no'); //Set backorders.                                        | string $backorders Options: 'yes', 'no' or 'notify'.
+        $objProduct->set_sold_individually(FALSE);
+        $objProduct->set_tax_class($roleassign); 
+
+        
+        
+        
+        $objProduct->set_reviews_allowed(TRUE); //Set if reviews is allowed.                        | bool
+        
+                     
+        
+        $term_ids =[$addnewproduct_data['pcategories']];
+        $objProduct->set_category_ids($term_ids); //Set the product categories.                   | array $term_ids List of terms IDs.
+        $objProduct->set_tag_ids($term_ids); //Set the product tags.                              | array $term_ids List of terms IDs.
+        $objProduct->set_image_id($productpicrul); //Set main image ID.                                         | int|string $image_id Product image id.
+        //Set gallery attachment ids.                       | array $image_ids List of image ids.
+        $new_product_id = $objProduct->save(); //Saving the data to create new product, it will return product ID.
+        
+        
             
-            contentmanagerlogging_file_upload($lastInsertId, serialize($result));
+            contentmanagerlogging_file_upload($lastInsertId, serialize($new_product_id));
             echo 'created successfully';
 
         
@@ -687,47 +713,59 @@ function addnewproducts($addnewproduct_data) {
 
 function updateproducts($updateproducts_data) {
 
-    require_once('../../../wp-load.php');
-    require_once( 'temp/lib/woocommerce-api.php' );
+   // require_once('../../../wp-load.php');
+    //require_once( 'temp/lib/woocommerce-api.php' );
    
     try {
 
+        
+        
+        
+        
         
         $user_ID = get_current_user_id();
         $user_info = get_userdata($user_ID);
         
         $lastInsertId = contentmanagerlogging('Update Product', "Admin Action", serialize($updateproducts_data), $user_ID, $user_info->user_email, "pre_action_data");
         
-          $url = get_site_url();
+        $url = get_site_url();
         $productimage=$_FILES['updateproductimage'];
         $price = $updateproducts_data['pprice'];
         $productid = $updateproducts_data['productid'];
         $roleassign = $updateproducts_data['roleassign'];
-       
+        $rootsite_url =  network_site_url();
         if(!empty($productimage)){
-        $productpicrul = resource_file_upload($productimage);
+        $productpicrul = product_file_upload($productimage);
         
+        //$productpicrul = str_replace($url.'/',"",$productpicrul);
+      
         }else{
             if(empty($updateproducts_data['productimageurl'])){
                 
+                 $productpicrul = 0;
+                
                
-                $productpicrul=$url."/wp-content/plugins/woocommerce/assets/images/placeholder.png";
                
             }else{
                 
-                $productpicrul= $updateproducts_data['productimageurl'];
+                $productpicrul = $updateproducts_data['productimageurl'];
               
             }
 
             
         }
         
+        
+        
+        
+        
+        
         if($updateproducts_data['stockstatus'] == 'instock'){
             $instock = true;
         }else{
             $instock=false;
         }
-        $data = [
+      /*  $data = [
                 'title' => $updateproducts_data['ptitle'],
                 'manage_stock' => true,
                 'regular_price' => $price,
@@ -743,15 +781,10 @@ function updateproducts($updateproducts_data) {
                 'enable_html_description'=> true,
                 'enable_html_short_description'=> true,
                 'categories' => [$updateproducts_data['pcategories']],
-                'images' => [
-                    [
-                        'src' => $productpicrul,
-                        'position' => 0
-                    ]
-                ]
-            ];
+                'images' => Array ( '0' => Array( 'src' => $productpicrul['file'], 'title' => '21', 'position' => '0' ) )      
         
-       
+            ];
+    
         
         $options = array(
             'debug' => true,
@@ -759,23 +792,48 @@ function updateproducts($updateproducts_data) {
             'validate_url' => false,
             'timeout' => 30,
             'ssl_verify' => false,
-        );
-        $woocommerce_rest_api_keys = get_option( 'ContenteManager_Settings' );
-        $wooconsumerkey = $woocommerce_rest_api_keys['ContentManager']['wooconsumerkey'];
-        $wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey'];
-        $woocommerce_object = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
+        ); */
+        
+              
+        //$objProduct = new WC_Product();
+        $objProduct = wc_get_product( $productid );
+        
+        
+        $objProduct->set_name($updateproducts_data['ptitle']); //Set product name.
+        $objProduct->set_status($updateproducts_data['pstatus']); //Set product status.
+        $objProduct->set_description($updateproducts_data['pdescrpition']); //Set product description.
+        $objProduct->set_short_description($updateproducts_data['pshortdescrpition']); //Set product short description.
        
-            
-            $result = $woocommerce_object->products->update( $productid, $data );
-            contentmanagerlogging_file_upload($lastInsertId, serialize($result));
+        $objProduct->set_price($price); //Set the product's active price.
+        $objProduct->set_regular_price($price); //Set the product's regular price.
+        $objProduct->set_stock_quantity($updateproducts_data['pquanitity']); //Set number of items available for sale.
+        $objProduct->set_stock_status($instock); //Set stock status.                               | string $status 'instock', 'outofstock' and 'onbackorder'
+        $objProduct->set_tax_class($roleassign); 
+        
+       
+        
+        
+        
+        $term_ids =[$updateproducts_data['pcategories']];
+        $objProduct->set_category_ids($term_ids); //Set the product categories.                   | array $term_ids List of terms IDs.
+        $objProduct->set_tag_ids($term_ids); //Set the product tags.                              | array $term_ids List of terms IDs.
+        $objProduct->set_image_id($productpicrul); //Set main image ID.                                         | int|string $image_id Product image id.
+        //Set gallery attachment ids.                       | array $image_ids List of image ids.
+        $new_product_id = $objProduct->save();
+      
+            contentmanagerlogging_file_upload($lastInsertId, serialize($new_product_id));
             $message = 'update successfully';
             echo $message;
-
+            
+          
         
     } catch (Exception $e) {
-
+            
+          
+        print_r($e);
+        
         contentmanagerlogging_file_upload($lastInsertId, serialize($e));
-
+       
         return $e;
     }
 
@@ -830,8 +888,8 @@ function deleteproduct($deletproductid) {
 
 function productclone($productcloneid) {
 
-    require_once('../../../wp-load.php');
-    require_once( 'temp/lib/woocommerce-api.php' );
+   // require_once('../../../wp-load.php');
+   // require_once( 'temp/lib/woocommerce-api.php' );
    
     try {
 
@@ -841,35 +899,12 @@ function productclone($productcloneid) {
         $lastInsertId = contentmanagerlogging('Clone Product', "Admin Action", $productcloneid, $user_ID, $user_info->user_email, "pre_action_data");
         
         $postid = $productcloneid['postid'];
-      
+        $url = get_site_url();
         
-        
-          $url = get_site_url();
-        
-        $options = array(
-            'debug' => true,
-            'return_as_array' => false,
-            'validate_url' => false,
-            'timeout' => 30,
-            'ssl_verify' => false,
-        );
-       $woocommerce_rest_api_keys = get_option( 'ContenteManager_Settings' );
-       $wooconsumerkey = $woocommerce_rest_api_keys['ContentManager']['wooconsumerkey'];
-       $wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey']; 
-       
-       $woocommerce_object = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
-       $get_product_clone = $woocommerce_object->products->get($postid);
-        
-        $product_cat_list = $woocommerce_object->products->get_categories() ;
-        foreach ($product_cat_list->product_categories as $key => $value) {
-             
-             if($get_product_clone->product->categories[0] == $value->name){
-                  $catid =  $value->id;
-             }
-         }
        
        
-        $data = [
+       
+        /*$data = [
                 'title' => $get_product_clone->product->title,
                 'manage_stock' => true,
                 'tax_class' =>$get_product_clone->product->tax_class,
@@ -891,12 +926,44 @@ function productclone($productcloneid) {
                         'position' => 0
                     ]
                 ]
-            ];
+            ];*/
+       
+        
+        $oldproduct = wc_get_product( $postid );
+       
+        $objProduct = new WC_Product();
+            
+        $objProduct->set_name($oldproduct->get_name().' (Copy)'); //Set product name.
+        $objProduct->set_status($oldproduct->get_status()); //Set product status.
+        $objProduct->set_featured(TRUE); //Set if the product is featured.                          | bool
+        $objProduct->set_catalog_visibility('visible'); //Set catalog visibility.                   | string $visibility Options: 'hidden', 'visible', 'search' and 'catalog'.
+        $objProduct->set_description($oldproduct->get_description()); //Set product description.
+        $objProduct->set_short_description($oldproduct->get_short_description()); //Set product short description.
+       
+        $objProduct->set_price($oldproduct->get_price()); //Set the product's active price.
+        $objProduct->set_regular_price($oldproduct->get_regular_price()); //Set the product's regular price.
+      
+        $objProduct->set_manage_stock(TRUE); //Set if product manage stock.                         | bool
+        $objProduct->set_stock_quantity($oldproduct->get_stock_quantity()); //Set number of items available for sale.
+        $objProduct->set_stock_status($oldproduct->get_stock_status()); //Set stock status.                               | string $status 'instock', 'outofstock' and 'onbackorder'
+        $objProduct->set_backorders('no'); //Set backorders.                                        | string $backorders Options: 'yes', 'no' or 'notify'.
+        $objProduct->set_sold_individually(FALSE);
+        $objProduct->set_tax_class($oldproduct->get_tax_class()); 
+
         
         
         
-        $result = $woocommerce_object->products->create($data);     
-        contentmanagerlogging_file_upload($lastInsertId, serialize($result));
+        $objProduct->set_reviews_allowed(TRUE); //Set if reviews is allowed.                        | bool
+        
+      
+       
+        $objProduct->set_category_ids($oldproduct->get_category_ids()); //Set the product categories.                   | array $term_ids List of terms IDs.
+        $objProduct->set_tag_ids($oldproduct->get_category_ids()); //Set the product tags.                              | array $term_ids List of terms IDs.
+        $objProduct->set_image_id($oldproduct->get_image_id()); //Set main image ID.                                         | int|string $image_id Product image id.
+        //Set gallery attachment ids.                       | array $image_ids List of image ids.
+        $new_product_id = $objProduct->save(); //Saving the data to create new product, it will return product ID.
+        
+         contentmanagerlogging_file_upload($lastInsertId, serialize($new_product_id));
         echo 'successfully Cloned';
 
         
@@ -908,5 +975,162 @@ function productclone($productcloneid) {
     }
 
     die();
+}
+
+function product_file_upload($updatevalue){
+   
+    if(!empty($updatevalue)){
+        if ( ! function_exists( 'wp_handle_upload' ) ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
+            //$upload_overrides = array( 'test_form' => false, 'mimes' => array('zip'=>'application/zip','eps'=>'application/postscript','ai' => 'application/postscript','jpg|jpeg|jpe' => 'image/jpeg','gif' => 'image/gif','png' => 'image/png','bmp' => 'image/bmp','pdf'=>'text/pdf','doc'=>'application/msword','docx'=>'application/msword','xlsx'=>'application/msexcel') );
+        $mime_type = array(
+	// Image formats
+	'jpg|jpeg|jpe'                 => 'image/jpeg',
+	'gif'                          => 'image/gif',
+	'png'                          => 'image/png',
+	'bmp'                          => 'image/bmp',
+	'tif|tiff'                     => 'image/tiff',
+	'ico'                          => 'image/x-icon',
+        'eps'                          => 'application/postscript',
+        'ai'                           =>  'application/postscript',
+	// Video formats
+	'asf|asx'                      => 'video/x-ms-asf',
+	'wmv'                          => 'video/x-ms-wmv',
+	'wmx'                          => 'video/x-ms-wmx',
+	'wm'                           => 'video/x-ms-wm',
+	'avi'                          => 'video/avi',
+	'divx'                         => 'video/divx',
+	'flv'                          => 'video/x-flv',
+	'mov|qt'                       => 'video/quicktime',
+	'mpeg|mpg|mpe'                 => 'video/mpeg',
+	'mp4|m4v'                      => 'video/mp4',
+	'ogv'                          => 'video/ogg',
+	'webm'                         => 'video/webm',
+	'mkv'                          => 'video/x-matroska',
+	
+	// Text formats
+	'txt|asc|c|cc|h'               => 'text/plain',
+	'csv'                          => 'text/csv',
+	'tsv'                          => 'text/tab-separated-values',
+	'ics'                          => 'text/calendar',
+	'rtx'                          => 'text/richtext',
+	'css'                          => 'text/css',
+	'htm|html'                     => 'text/html',
+	
+	// Audio formats
+	'mp3|m4a|m4b'                  => 'audio/mpeg',
+	'ra|ram'                       => 'audio/x-realaudio',
+	'wav'                          => 'audio/wav',
+	'ogg|oga'                      => 'audio/ogg',
+	'mid|midi'                     => 'audio/midi',
+	'wma'                          => 'audio/x-ms-wma',
+	'wax'                          => 'audio/x-ms-wax',
+	'mka'                          => 'audio/x-matroska',
+	
+	// Misc application formats
+	'rtf'                          => 'application/rtf',
+	'js'                           => 'application/javascript',
+	'pdf'                          => 'application/pdf',
+	'swf'                          => 'application/x-shockwave-flash',
+	'class'                        => 'application/java',
+	'tar'                          => 'application/x-tar',
+	'zip'                          => 'application/zip',
+	'gz|gzip'                      => 'application/x-gzip',
+	'rar'                          => 'application/rar',
+	'7z'                           => 'application/x-7z-compressed',
+	'exe'                          => 'application/x-msdownload',
+	
+	// MS Office formats
+	'doc'                          => 'application/msword',
+	'pot|pps|ppt'                  => 'application/vnd.ms-powerpoint',
+	'wri'                          => 'application/vnd.ms-write',
+	'xla|xls|xlt|xlw'              => 'application/vnd.ms-excel',
+	'mdb'                          => 'application/vnd.ms-access',
+	'mpp'                          => 'application/vnd.ms-project',
+	'docx'                         => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'docm'                         => 'application/vnd.ms-word.document.macroEnabled.12',
+	'dotx'                         => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+	'dotm'                         => 'application/vnd.ms-word.template.macroEnabled.12',
+	'xlsx'                         => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	'xlsm'                         => 'application/vnd.ms-excel.sheet.macroEnabled.12',
+	'xlsb'                         => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+	'xltx'                         => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+	'xltm'                         => 'application/vnd.ms-excel.template.macroEnabled.12',
+	'xlam'                         => 'application/vnd.ms-excel.addin.macroEnabled.12',
+	'pptx'                         => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'pptm'                         => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+	'ppsx'                         => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+	'ppsm'                         => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+	'potx'                         => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+	'potm'                         => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
+	'ppam'                         => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+	'sldx'                         => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+	'sldm'                         => 'application/vnd.ms-powerpoint.slide.macroEnabled.12',
+	'onetoc|onetoc2|onetmp|onepkg' => 'application/onenote',
+	
+	// OpenOffice formats
+	'odt'                          => 'application/vnd.oasis.opendocument.text',
+	'odp'                          => 'application/vnd.oasis.opendocument.presentation',
+	'ods'                          => 'application/vnd.oasis.opendocument.spreadsheet',
+	'odg'                          => 'application/vnd.oasis.opendocument.graphics',
+	'odc'                          => 'application/vnd.oasis.opendocument.chart',
+	'odb'                          => 'application/vnd.oasis.opendocument.database',
+	'odf'                          => 'application/vnd.oasis.opendocument.formula',
+	
+	// WordPerfect formats
+	'wp|wpd'                       => 'application/wordperfect',
+	
+	// iWork formats
+	'key'                          => 'application/vnd.apple.keynote',
+	'numbers'                      => 'application/vnd.apple.numbers',
+	'pages'                        => 'application/vnd.apple.pages',
+);    
+        $upload_overrides = array( 'test_form' => false,$mime_type);
+        $file = wp_handle_upload( $updatevalue, $upload_overrides );
+        if(!empty($file['file'])){
+          
+          
+            
+        
+       
+    $name = $updatevalue['name'];
+    $ext  = pathinfo( $name, PATHINFO_EXTENSION );
+    $name = wp_basename( $name, ".$ext" );
+ 
+    $url = $file['url'];
+    $type = $file['type'];
+    $file = $file['file'];
+    $title = sanitize_text_field( $name );
+    $content = '';
+    $excerpt = '';
+ 
+   
+    $attachment = array(
+        'post_mime_type' => $type,
+        'guid' => $url,
+        'post_parent' => '',
+        'post_title' => $title,
+        'post_content' => $content,
+        'post_excerpt' => $excerpt,
+    );
+    
+    
+  
+ 
+    // This should never be set as it would then overwrite an existing attachment.
+    unset( $attachment['ID'] );
+ 
+    // Save the data
+    $id = wp_insert_attachment( $attachment, $file, '', true );
+    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+// Generate the metadata for the attachment, and update the database record.
+    $attach_data = wp_generate_attachment_metadata( $id, $file );
+    wp_update_attachment_metadata( $id, $attach_data );
+    
+    return $id;
+        }  
+        
+  }
+    
 }
 
