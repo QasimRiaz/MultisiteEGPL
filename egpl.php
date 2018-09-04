@@ -214,16 +214,18 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
     
     $email = $_POST['email'];
     $role =$_POST['sponsorlevel'];
+    $welcomeemailtemplatename = $_POST['welcomeemailtempname'];
     $loggin_data=$_POST;
     
     
     unset($_POST['username']);
     unset($_POST['email']);
     unset($_POST['sponsorlevel']);
+    unset($_POST['welcomeemailtempname']);
     
   //  print_r($_POST);
   
-
+    $welcomeemail_status = $_POST['welcomeemailstatus'];
     $user_id = username_exists($username);
     
     $message['username'] = $username;
@@ -248,8 +250,13 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
      
             $useremail='';
            
-            update_user_option( $user_id, 'convo_welcomeemail_datetime', $t*1000 );
-            custome_email_send($user_id,$useremail);
+            if($welcomeemail_status == 'send'){
+                    $useremail='';
+                    custome_email_send($user_id,$useremail,$welcomeemailtemplatename);
+                    $t=time();
+                    update_user_option($user_id, 'convo_welcomeemail_datetime', $t*1000);
+            }  
+            
        }else{
 		  
            $userregister_responce = (array)$user_id;
@@ -272,8 +279,19 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
                 switch_to_blog($blogid);
                 add_new_sponsor_metafields($user_id,$meta_array,$role);
                 add_user_to_blog(1, $user_id, $role);
+                
+                
+                
                 custome_email_send($user_id,$email);
-                update_user_option($user_id, 'convo_welcomeemail_datetime', $t*1000);
+                 if($welcomeemail_status == 'send'){
+                    $useremail='';
+                    custome_email_send($user_id,$email,$welcomeemailtemplatename);
+                    $t=time();
+                    update_user_option($user_id, 'convo_welcomeemail_datetime', $t*1000);
+                }  
+                
+                
+               
                 $message['msg'] = 'User added to this blog.';
             } else {
                 $message['msg'] = 'Failed to add user ' . $user_id . ' as ' . $role . ' to blog ' . $blogid . '.';
@@ -3414,7 +3432,7 @@ function getReportsdatanew($report_name,$usertimezone){
 
 add_action('wp_enqueue_scripts', 'add_contentmanager_js');
 function add_contentmanager_js(){
-      wp_enqueue_script('safari4', plugins_url().'/EGPL/js/my_task_update.js', array('jquery'),'2.1.2', true);
+      wp_enqueue_script('safari4', plugins_url().'/EGPL/js/my_task_update.js', array('jquery'),'2.1.9', true);
     
      wp_enqueue_script( 'jquery.alerts', plugins_url() . '/EGPL/js/jquery.alerts.js', array(), '1.1.0', true );
      wp_enqueue_script( 'boot-date-picker', plugins_url() . '/EGPL/js/bootstrap-datepicker.js', array(), '1.2.0', true );
@@ -3426,11 +3444,11 @@ function add_contentmanager_js(){
      wp_enqueue_script('safari1', plugins_url('/js/modernizr.custom.js', __FILE__), array('jquery'));
      wp_enqueue_script('safari2', plugins_url('/js/classie.js', __FILE__), array('jquery'));
      wp_enqueue_script('safari3', plugins_url('/js/progressButton.js', __FILE__), array('jquery'));
-   
+     wp_enqueue_script('confirm-jQuery', plugins_url('/js/jquery-confirm.js?v=1.2', __FILE__), array('jquery'));
     // wp_enqueue_script('bulk-email', plugins_url('/js/bulk-email.js', __FILE__), array('jquery'));
      wp_enqueue_script('sweetalert', plugins_url('/EGPL/cmtemplate/js/lib/bootstrap-sweetalert/sweetalert.min.js'), array('jquery'));
      wp_enqueue_script('password_strength_cal', plugins_url('/js/passwordstrength.js', __FILE__), array('jquery'));
-     wp_enqueue_script('selfsignupjs', plugins_url('/js/selfsignupjs.js', __FILE__), array('jquery'));
+     wp_enqueue_script( 'selfsignupjs2', plugins_url() . '/EGPL/js/selfsignupjs.js', array(), '1.9', true );
       //wp_enqueue_script('rolejs', plugins_url('/js/role.js', __FILE__), array('jquery'));
      
    
@@ -3451,6 +3469,7 @@ function my_contentmanager_style() {
    // wp_enqueue_style('contentmanager-css', plugins_url() .'/EGPL/css/forntend.css');
     wp_enqueue_style('my-admin-theme1', plugins_url() .'/EGPL/css/component.css',array(), '1.1', 'all');
     wp_enqueue_style('my-admin-theme', plugins_url('css/normalize.css', __FILE__));
+     wp_enqueue_style('jQuery-confirm-css', plugins_url('css/jquery-confirm.css?v=1.3', __FILE__));
   
    
 }
@@ -4766,8 +4785,8 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
             
         }
         
-      $plaintext_pass=wp_generate_password( 8, false, false );
-        wp_set_password( $plaintext_pass, $user_id );
+        //$plaintext_pass=wp_generate_password( 8, false, false );
+        //wp_set_password( $plaintext_pass, $user_id );
         
         $settitng_key='AR_Contentmanager_Email_Template_welcome';
         $sponsor_info = get_option($settitng_key);
@@ -5450,15 +5469,15 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  
+                  $plaintext_pass=wp_generate_password( 8, false, false );
+                  wp_set_password( $plaintext_pass, $user_id );
+                  $status['userpass'] = $plaintext_pass;
+              
               
               }
               
             
               add_new_sponsor_metafields($user_id,$meta_array,$role);
-              $plaintext_pass=wp_generate_password( 8, false, false );
-              wp_set_password( $plaintext_pass, $user_id );
-              $status['userpass'] = $plaintext_pass;
               
               
             }
@@ -5502,15 +5521,16 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  
+                  $plaintext_pass=wp_generate_password( 8, false, false );
+                  wp_set_password( $plaintext_pass, $user_id );
+                  $status['userpass'] = $plaintext_pass;
+             
               
               }
               
               add_user_to_blog($currentblogid, $user_id, $role);
               add_new_sponsor_metafields($user_id,$meta_array,$role);
-              $plaintext_pass=wp_generate_password( 8, false, false );
-              wp_set_password( $plaintext_pass, $user_id );
-              $status['userpass'] = $plaintext_pass;
+              
               
             }    
             
@@ -6233,6 +6253,16 @@ function checkloginuserstatus_fun() {
     }
 }
 
+
+// ShortCode For Display View Floor Plan Button
+
+function viewfloorplanbutton( $atts ){
+	  
+      
+      return '<button id="floorplanpopup" onclick="openpopup()" class="button fusion-button fusion-button-default button-square fusion-button-xlarge button-xlarge button-flat  fusion-mobile-button continue-center">View Floor Plan</button>';
+      
+}
+add_shortcode( 'viewfloorplanbutton', 'viewfloorplanbutton' );
 
 
 

@@ -99,6 +99,7 @@ function user_file_upload($keyvalue,$updatevalue,$status,$oldvalue,$postid,$last
 	'rtx'                          => 'text/richtext',
 	'css'                          => 'text/css',
 	'htm|html'                     => 'text/html',
+        'svg'                          => 'image/svg+xml',
 	
 	// Audio formats
 	'mp3|m4a|m4b'                  => 'audio/mpeg',

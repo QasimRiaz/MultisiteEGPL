@@ -49,7 +49,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                 </div>
             </header>
            <select id="assignuserroles" style="display: none;" >
-               <option value="subscriber" selected="selected"></option>   
+                
     <?php  
     foreach ($get_all_roles as $key => $item) {
         if($item['name'] !='Administrator' && $item['name'] !='Content Manager' && $item['name'] !='Subscriber'){

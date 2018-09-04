@@ -81,3 +81,21 @@ function selfisignupadd_new_sponsor(){
       
   }
 }
+
+function openpopup(){
+    
+    var url = currentsiteurl + "/";
+    jQuery('.fusion-header-wrapper').css("z-index", "9998");
+    
+    jQuery.confirm({
+            title: 'Floor Plan',
+            content:'<iframe height="600" src="'+url+'/floor-plan-viewer/" width="100%"  frameborder="0" allowfullscreen="allowfullscreen"></iframe>',
+            closeIcon: true,
+            columnClass: 'jconfirm-box-container-special',
+            confirmButton:false,
+            cancelButton:false,
+         });
+    
+    
+    
+}

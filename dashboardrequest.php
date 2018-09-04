@@ -159,13 +159,16 @@ function getdashboardactiveusergraph() {
 
     try {
         
-       
+        global $wpdb;
+        $site_prefix = $wpdb->get_blog_prefix();
+        $custome_login_date_time_key = $site_prefix.'custom_login_time_as_site';
+        
         $args_activeuser = array(
             'role__not_in'=>'Administrator',
             'meta_query' => array(
                 'relation'=>'AND',
                 array(
-                    'key' => 'wp_user_login_date_time',
+                    'key' => $custome_login_date_time_key,//'wp_user_login_date_time',
                     'value' => '', // date to compare to, after this one
                     'compare' => '!=',
                     
@@ -239,6 +242,10 @@ function getdashboarddailygraph($data) {
     try {
         
         $usertimezone = -5;//$data['usertimezone'];
+        global $wpdb;
+        $site_prefix = $wpdb->get_blog_prefix();
+        $custome_login_date_time_key = $site_prefix.'custom_login_time_as_site';
+        
         
         $start_date = date('d-M-Y');
         $end_date   = date('d-M-Y', strtotime("-6 days"));
@@ -253,7 +260,7 @@ function getdashboarddailygraph($data) {
             'meta_query' => array(
                 'relation'=>'AND',
                 array(
-                    'key' => 'wp_user_login_date_time',
+                    'key' => $custome_login_date_time_key,//'wp_user_login_date_time',
                     'value' => array( strtotime($end_date.' 00:00'), strtotime($start_date.' 23:59') ), // date to compare to, after this one
                     'compare' => 'BETWEEN',
                     
@@ -267,7 +274,7 @@ function getdashboarddailygraph($data) {
              
              $user_data = get_userdata($aid->ID);
              $all_meta_for_user = get_user_meta($aid->ID);
-             $user_last_login[] = date('d-M-Y', $all_meta_for_user['wp_user_login_date_time'][0]);
+             $user_last_login[] = date('d-M-Y', $all_meta_for_user[$custome_login_date_time_key][0]);
         }
         $occurences = array_count_values($user_last_login);
          foreach ($totaldatesarray as $datekeys) {

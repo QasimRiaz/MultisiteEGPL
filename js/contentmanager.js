@@ -1709,7 +1709,7 @@ function checkemailaddressalreadyexist(){
 			confirmButtonText: "Ok"
                      });
                     
-                }else if(data == 'User already exists for this site.'){
+                }else if(data.trim() == 'User already exists for this site.'){
                     
                     swal({
                         title: "Info",
@@ -1725,72 +1725,27 @@ function checkemailaddressalreadyexist(){
                     jQuery.confirm({
                         
                         title: 'Email Status',
-                        content: '<div id="titlestatus" ></div><div ><p></p><input value="'+currentemail+'" style="margin-bottom: 10px;padding: 9px;border: #d6e2e8 solid 1px; width: 100%; height: 35px; border-radius: 3px;" type="text" id="newemailaddress" readonly><p style="margin: 5px 0px;">A user account with this email address already exists and attached to a different event. Would you like to add this user to the current event?</p><p><strong>User Level * :</strong><select style="margin-left: 14px;border: #cccccc 1px solid;border-radius: 7px;height: 36px;width: 78%;"id="selectuserlevel" required>'+hiddenrolelist+'</select> </p><p style="margin: 5px 0px;"><input checked type="checkbox" value="checked" id="welcomememailstatus"> Send a welcome email (and new password) to this user</p><p><strong>Select Welcome Email Template :</strong><select style="margin-left: 14px;border: #cccccc 1px solid;border-radius: 7px;height: 36px;width: 53%;"id="welcomeemailtemplate">'+hiddentemplatelist+'</select> </p></div>',
+                        content: '<div id="titlestatus" ></div><div ><p></p><input value="'+currentemail+'" style="margin-bottom: 10px;padding: 9px;border: #d6e2e8 solid 1px; width: 100%; height: 35px; border-radius: 3px;" type="text" id="newemailaddress" readonly><p style="margin: 5px 0px;">A user account with this email address already exists and attached to a different event. Would you like to add this user to the current event?</p></div>',
                         confirmButtonClass: 'mycustomwidth specialbuttoncolor',
-                        confirmButton: 'Add',
                         cancelButton: 'Cancel',
                         animation: 'rotateY',
                         closeIcon: true,
                         confirm: function () {
                             
-                            var welcomememailstatus;
-                            var newemailaddress = jQuery("#newemailaddress").val();
-                            var userrole = jQuery("#selectuserlevel option:selected").val();
-                            var newdata = new FormData();    
-                            if (jQuery('#welcomememailstatus').is(':checked')) {
-                                    var selectedtemplateemailname = jQuery("#welcomeemailtemplate option:selected").val();
-                                    newdata.append('selectedtemplateemailname', selectedtemplateemailname);
-                                    welcomememailstatus = 'checked';
-                                } else {
-                                    welcomememailstatus = 'unchecked';
-                                }
-                                
-                                
-                                newdata.append('newemailaddress', newemailaddress);
-                                newdata.append('welcomememailstatus', welcomememailstatus);
-                                newdata.append('userrole', userrole);
-                                jQuery("#titlestatus").empty();
-                                
-
-                                    jQuery.ajax({
-                                        url: updateurl,
-                                        data: newdata,
-                                        cache: false,
-                                        contentType: false,
-                                        processData: false,
-                                        type: 'POST',
-                                        success: function (data) {
-                                         
-                                            var message = jQuery.parseJSON(data);
-                                            jQuery('body').css('cursor', 'default');
-
-                                            if (message.useradded == 'updated successfully') {
-                                                swal({
-                                                    title: "Success!",
-                                                    text: 'User added to this site Successfully.<br>'+message.synctofloorplan,
-                                                    type: "success",
-                                                    html:true,
-                                                    confirmButtonClass: "btn-success"
-                                                },
-                                                        function (isConfirm) {
-
-                                                            location.reload();
-                                                        }
-
-                                                );
-                                            } else {
-
-                                                 swal({
-                                                    title: "Error",
-                                                    text: "There was an error during the requested operation. Please try again.",
-                                                    type: "error",
-                                                    confirmButtonClass: "btn-danger",
-                                                    confirmButtonText: "Ok"
-                                                });
-                                            }
-                                        }
-                                    });
-}
+                            
+                            var dataArray = jQuery.parseJSON(data);
+                            
+                            jQuery('#Sfname').val(dataArray.first_name);
+                            jQuery('#Slname').val(dataArray.last_name);
+                            jQuery('#company_name').val(dataArray.company_name);
+                            jQuery('.preuploadrolename').val(dataArray.role_name);
+                            
+                            
+                            
+                            
+                            
+                            
+                        }
                     });
                }
              },error: function (xhr, ajaxOptions, thrownError) {

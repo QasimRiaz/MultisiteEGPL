@@ -48,7 +48,7 @@ function bulkemail_preview(){
     if(checkbccstatus ==  false){
             swal({
                     title: "Error",
-                    text: "Please input only one and valid email address in BCC field. Multiple emails are not allowed.",
+                    text: "Invalid BCC email address. Please input a single valid email address.",
                     type: "error",
                     confirmButtonClass: "btn-danger",
                     confirmButtonText: "Ok"

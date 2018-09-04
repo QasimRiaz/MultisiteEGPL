@@ -1614,6 +1614,7 @@ function  check_useremail_exist($useremail){
            $user_status_for_this_site = 'not_exist';
            foreach ($user_blogs as $blog_id) { 
                
+               $fetchuserdatauserblogID = $blog_id->userblog_id;
                if($blog_id->userblog_id == $current_blog_id ){
                    
                    $user_status_for_this_site = 'alreadyexist';
@@ -1628,7 +1629,17 @@ function  check_useremail_exist($useremail){
               echo 'User already exists for this site.'; 
           }else{
               
-              echo 'This email address exist'; 
+              $data_array['first_name'] = get_user_meta($user_id, 'wp_'.$fetchuserdatauserblogID.'_first_name', true);
+              $data_array['last_name'] =  get_user_meta($user_id, 'wp_'.$fetchuserdatauserblogID.'_last_name', true);
+              $data_array['company_name'] = get_user_meta($user_id, 'wp_'.$fetchuserdatauserblogID.'_company_name', true);
+              $Srole = get_user_meta($user_id, 'wp_'.$fetchuserdatauserblogID.'_capabilities', true);
+              $rolename = array_keys($Srole);
+              $data_array['role_name'] = $rolename[0]; //;get_user_meta($user_id, 'wp_'.$fetchuserdatauserblogID.'_capabilities', true);
+                      
+              echo json_encode($data_array);        
+              
+              
+              
           }
         }
        

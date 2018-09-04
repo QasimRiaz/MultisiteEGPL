@@ -65,7 +65,7 @@ function multi_welcomeemail_save_template(){
     if(checkbccstatus ==  false){
             swal({
                     title: "Error",
-                    text: "Please input only one and valid email address in BCC field. Multiple emails are not allowed.",
+                    text: "Invalid BCC email address. Please input a single valid email address.",
                     type: "error",
                     confirmButtonClass: "btn-danger",
                     confirmButtonText: "Ok"
@@ -240,6 +240,7 @@ function checkemailstatus(){
     
     
     var email = jQuery('#BCC').val();
+    if(email.length > 0){
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/igm;
     if (re.test(email)) {
         
@@ -250,7 +251,9 @@ function checkemailstatus(){
         return false;
         
     }
-
+    }else{
+        return true;
+    }
 
     
     

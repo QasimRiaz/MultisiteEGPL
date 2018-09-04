@@ -578,17 +578,20 @@ function order_report_savefilters() {
 
             var getorderreportsavedlist = jQuery.parseJSON(data);
             jQuery("#loadorderreportlist").empty();
+            jQuery("#customeloadorderreport").empty();
             jQuery.each(getorderreportsavedlist, function (i, item) {
 
                 if (item == orderreportname) {
 
 
                     jQuery("#loadorderreportlist").append("<option value='" + item + "' selected='selected'>" + item + "</option>");
+                    jQuery("#customeloadorderreport").append("<option value='" + item + "' selected='selected'>" + item + "</option>");
 
 
                 } else {
 
                     jQuery("#loadorderreportlist").append(jQuery("<option/>").attr("value", item).text(item));
+                    jQuery("#customeloadorderreport").append(jQuery("<option/>").attr("value", item).text(item));
                 }
 
             });

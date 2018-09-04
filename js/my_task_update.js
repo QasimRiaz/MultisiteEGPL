@@ -161,6 +161,7 @@ function update_user_meta_custome(elem) {
     
     jQuery("body").css({'cursor':'wait'})
     var id = jQuery(elem).attr("id");
+    console.log(id)
     var sponsorid=getUrlParameter('sponsorid');
     
     var url = currentsiteurl+'/';
@@ -194,10 +195,25 @@ function update_user_meta_custome(elem) {
                    jQuery("." + value+'_submissionstatus').css( "background-color", "#d5f1d5");
                    jQuery('#update_'+value+'_remove').addClass('specialremoveiconenable');
                    jQuery('#'+id).children('.content').text('Submitted');
-                   jQuery('#'+id).addClass('disableremovebutton');
-                   jQuery("#" + value).prop("disabled", true);
+                   
+                   
                }
-               
+               if(sponsorid){
+                   
+                    swal({
+                                 title: "Success",
+                                 text: "Value has been updated successfully.",
+                                 type: "success",
+                                 confirmButtonClass: "btn-success",
+                                 confirmButtonText: "Ok"
+                             });
+                }else{
+                    
+                    if(metaupdate !=""){
+                        jQuery('#'+id).addClass('disableremovebutton');
+                        jQuery("#" + value).prop("disabled", true);
+                    }
+                }
                
                
             },error: function (xhr, ajaxOptions, thrownError) {
