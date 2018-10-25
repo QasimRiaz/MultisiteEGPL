@@ -91,7 +91,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
 
                                                 <select style="width:100%;height:38px;"class="form-control" onchange="loaduserreport()" id="loaduserreport">
                                                     <option disabled selected hidden>Load a Report</option>
-                                                    <option value="defult"></option>
+                                                   
                                                     <option value="defult">Save Current Template As</option>
                                                     <optgroup label="Saved Templates" id="loaduserreportlist">
 

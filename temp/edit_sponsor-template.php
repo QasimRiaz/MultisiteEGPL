@@ -3,15 +3,13 @@
    if (current_user_can('administrator') || current_user_can('contentmanager') ) {
        
     
-	global $wpdb;
-        $site_prefix = $wpdb->get_blog_prefix();
+		
       if(!empty($_GET['sponsorid'])){
           $sponsor_id=$_GET['sponsorid'];
           $meta_for_user = get_userdata( $sponsor_id );
           $all_meta_for_user = get_user_meta($sponsor_id );
-          $site_prefix = $wpdb->get_blog_prefix();
-         // echo '<pre>';
-        //  print_r( $meta_for_user );
+          //echo '<pre>';
+          //print_r( $all_meta_for_user );exit;
           
       }
        $settitng_key='ContenteManager_Settings';
@@ -29,6 +27,7 @@
     if (is_multisite()) {
                 $blog_id = get_current_blog_id();
                 $get_all_roles_array = 'wp_'.$blog_id.'_user_roles';
+                $site_prefix = 'wp_'.$blog_id.'_';
             }else{
                 $get_all_roles_array = 'wp_user_roles';
             }
@@ -158,16 +157,8 @@
                               <div class="form-group row">
                                     <label class="col-sm-2 form-control-label">User Level <strong>*</strong></label>
                                     <div class="col-sm-10">
-                                        <?php if($rolename == 'contentmanager'){?>
-                                        
-                                            <select  class="form-control" id="Srole" disabled="true">
-                                            
-                                        <?php }else{?>
-                                            
-                                            <select  class="form-control" id="Srole" requried>
-                                                
-                                        <?php }?>
-								 
+                                           
+								 <select  class="form-control" id="Srole" required>
 								
                                                                      <option></option>
                                                                          <?php
@@ -198,7 +189,7 @@
                                 </div>             
                    <div class="form-group row">
                                     <label class="col-sm-2 form-control-label">Company Logo </label>
-                                    <?php if(empty($all_meta_for_user[$site_prefix.'user_profile_url'][0])){?>  
+                                    <?php if(empty($all_meta_for_user['user_profile_url'][0])){?>  
                                     <div class="col-sm-10">
                                                      
                                         
@@ -209,7 +200,7 @@
                                    <?php }else{?>
                                     <div id="showprofilepic">
                                     <div class="col-sm-5">
-                                       <img width="200" id="userprofilepic"  name="userprofilepic" src="<?php echo $all_meta_for_user[$site_prefix.'user_profile_url'][0];?>" >
+                                       <img width="200" id="userprofilepic"  name="userprofilepic" src="<?php echo $all_meta_for_user['user_profile_url'][0];?>" >
                                     </div>
                                     <div class="col-sm-4">
                                         <a width="200" class="btn btn-inline mycustomwidth btn-success" onclick="showprofilefieldupload()" >Edit Logo</a>
@@ -230,32 +221,157 @@
                   </div>                  
                       <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-2">
                           
-                           <?php   foreach ($additional_fields as $key=>$value){  if($additional_fields[$key]['name'] !='Notes'){
-                               
-                                    $additionalfieldkey = $additional_fields[$key]['key'];
-                               
-                               ?>
-                          
-                                 <div class="form-group row" >
-                                    <label class="col-sm-2 form-control-label"><?php echo $additional_fields[$key]['name'];?></label>
-                                    <div class="col-sm-10">
-                                        
-					<input type="text"  class="form-control mymetakey" id="<?php echo $additional_fields[$key]['key'];?>" name="<?php echo $additional_fields[$key]['key'];?>" value="<?php echo $all_meta_for_user[$site_prefix.$additionalfieldkey][0];?>" placeholder="<?php echo $additional_fields[$key]['name'];?>" >
-								
-                                        
-                                    </div>
-                                </div>
-                           <?php }} ?>
+                           
+                             <?php   foreach ($additional_fields as $key=>$value){ if($additional_fields[$key]['type'] != 'checkbox' && $additional_fields[$key]['type'] != 'html'){ ?>
                                
                                 <div class="form-group row" >
-                                    <label class="col-sm-2 form-control-label">Notes</label>
-                                    <div class="col-sm-10">
+                                    <label class="col-sm-4 form-control-label"><?php echo $additional_fields[$key]['formlabel'];?></label>
+                                    <div class="col-sm-8">
                                         
-                                        <textarea   class="form-control mymetakey" id="usernotes" name="usernotes"  ><?php echo $all_meta_for_user[$site_prefix.'usernotes'][0];?></textarea>
-								
+                                       <?php if($additional_fields[$key]['type'] == 'text'){ ?> 
+                                        
+					<input type="text"  class="form-control mymetakey" id="<?php echo $additional_fields[$key]['key'];?>" name="<?php echo $additional_fields[$key]['key'];?>" value="<?php echo $all_meta_for_user[$site_prefix.$additional_fields[$key]['key']][0];?>" placeholder="<?php echo $additional_fields[$key]['formlabel'];?>" >
+                                       
+                                        <?php }else if($additional_fields[$key]['type'] == 'textarea'){?>
+                                        
+                                             <textarea   class="form-control mymetakey" id="<?php echo $additional_fields[$key]['key'];?>" name="<?php echo $additional_fields[$key]['key'];?>" placeholder="<?php echo $additional_fields[$key]['formlabel'];?>"><?php echo $all_meta_for_user[$site_prefix.$additional_fields[$key]['key']][0];?></textarea>
+                                        
+                                        
+                                       <?php }else if($additional_fields[$key]['type'] == 'dropdown'){?>
+                                             
+                                             
+                                             <?php if($additional_fields[$key]['multiselect'] == true) {
+                                                 
+                                                    $multiselectvalues = explode(";",$all_meta_for_user[$site_prefix.$additional_fields[$key]['key']][0]);
+                                                   
+                                                 
+                                                 ?>
+                                              <select class="select2 mycustomedropdown"   id="<?php echo $additional_fields[$key]['key'];?>" data-allow-clear="true" data-toggle="tooltip" multiple="multiple">
+                                                    <?php foreach ($additional_fields[$key]['options'] as $key=>$value){
+                                                            $skipthis = false;
+                                                        foreach ($multiselectvalues as $nkey=>$nvalue){
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            if(!empty($nvalue) && $nvalue == $value['value'] ){
+                                                                
+                                                                $skipthis = true;
+                                                                
+                                                                
+                                                                ?>
+                                                  
+                                                  
+                                                                 <option value='<?php echo $value['value'];?>' selected="selected"><?php echo $value['value'];?></option>
+                                                                
+                                                                
+                                                                
+                                                            <?php } ?>
+                                                            
+                                                        
+                                                        
+                                                                
+                                                         
+                                                    
+                                                            <?php }?>
+                                                            <?php if($skipthis == false){?>
+                                                                
+                                                                <option value='<?php echo $value['value'];?>'><?php echo $value['value'];?></option>
+                                                                
+                                                                
+                                                            <?php }} ?>
+                                                         
+                                                         
+                                                         
+                                                         
+                                                       
+                                                   
+                                              </select>
+                                             <?php }else {
+                                                 
+                                                  $multiselectvalues = explode(";",$all_meta_for_user[$site_prefix.$additional_fields[$key]['key']][0]);
+                                                 
+                                                 
+                                                 ?>
+                                                
+                                                    <select class="select2 mycustomedropdown"   id="<?php echo $additional_fields[$key]['key'];?>" data-allow-clear="true">
+
+                                                       <?php foreach ($additional_fields[$key]['options'] as $key=>$value){ 
+                                                           
+                                                           
+                                                           if($multiselectvalues[0] == $value['value']){
+                                                           
+                                                           
+                                                           ?>
+                                                                
+                                                           
+                                                            
+                                                        <option value='<?php echo $value['value'];?>' selected="selected"><?php echo $value['value'];?></option>
+                                                                 
+                                                              
+                                                           <?php }else{?>
+                                                        
+                                                        
+                                                   
+                                                            <option value='<?php echo $value['value'];?>'><?php echo $value['value'];?></option>
+                                                       
+                                                        
+                                                         
+                                                       <?php }} ?>
+
+                                                   </select>
+                                             
+                                             <?php } ?>
+                                             
+                                       <?php } }?> 
+                                       <?php if($additional_fields[$key]['type'] == 'checkbox'){ 
+                                           
+                                           
+                                           $checkstatusValue = $all_meta_for_user[$site_prefix.$additional_fields[$key]['key']][0];
+                                           
+                                           ?>
+                                             <div class="form-group row" >
+                                                 
+                                                 <div class="col-sm-12">
+                                                     <?php if($checkstatusValue == true){ ?>
+                                                         
+                                                     <input  class="mycustomcheckbox" type="checkbox" id="<?php echo $additional_fields[$key]['key'];?>" checked="true"><?php echo '   '.$additional_fields[$key]['formlabel'];?><br/>
+                                                         
+                                                     <?php }else{ ?>
+                                                         
+                                                         
+                                                         <input  class="mycustomcheckbox" type="checkbox" id="<?php echo $additional_fields[$key]['key'];?>"><?php echo '   '.$additional_fields[$key]['formlabel'];?><br/>
+                                             
+                                                         
+                                                         
+                                                     
+                                                    <?php }?>  
+                                                     
+                                               
+                                            
+                                       <?}?>
+                                       
+                                       <?php if($additional_fields[$key]['type'] == 'html'){ ?>
+                                             <div class="form-group row" >
+                                                 
+                                                 <div class="col-sm-12">
+                                                    
+                                                    <?php echo $additional_fields[$key]['name'];?>
+                                                     
+                                                     
+                                               
+                                            
+                                       <?}?>
                                         
                                     </div>
                                 </div>
+                           
+                       <?php } ?>  
+                             
+                          
+                          
+                          
 	                    </div><!--.box-typical-body-->
 	                </section><!--.box-typical-dashboard-->           
                                

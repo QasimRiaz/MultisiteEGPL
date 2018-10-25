@@ -385,15 +385,33 @@ function add_new_sponsor(){
   }
 }
 function add_new_admin_user(){
+    
+    
    var url = currentsiteurl+'/';
-  
-  var email =  jQuery("#Semail").val();
- var username =  jQuery("#Semail").val();
-  var sponsorlevel = jQuery("#Srole option:selected").val();
-
-  var urlnew = url + 'wp-content/plugins/EGPL/egpl.php?contentManagerRequest=addnewadminuser';
-  var data = new FormData();
+   var email =  jQuery("#Semail").val();
+   var username =  jQuery("#Semail").val();
+   var sponsorlevel = jQuery("#Srole option:selected").val();
+   var urlnew = url + 'wp-content/plugins/EGPL/egpl.php?contentManagerRequest=addnewadminuser';
+   var data = new FormData();
+   
+   if (jQuery('#checknewuser').is(":checked")){
+       
+        
+         var loadwelcomeemailtemplate = jQuery( "#selectedwelcomeemailtemp option:selected" ).val();
+         
+         data.append('welcomeemailstatus', 'send');
+         data.append('welcomeemailtempname', loadwelcomeemailtemplate);
+       
+    }else{
+        
+        data.append('welcomeemailstatus', 'notsend');
+         
+       
+   }
+   
+   
    jQuery("body").css("cursor", "progress");
+   
   if(email !=""  ){
       
        data.append('username', username);
@@ -1506,7 +1524,7 @@ function approvethisuser(elem){
     var idsponsor = jQuery(elem).attr("id");
     jQuery.confirm({
         title: '<p style="text-align:center;" >Are you sure?</p>',
-        content: '<p><h3 style="text-align:center;">Do you want to approve this user? This will send them a welcome email.</h3></p><p style="text-align:center;">Here you can assign a level to this user.</p><p style="text-align:center;"><strong>Assign Level :  </strong> <select id="selectassignlevel" style="width: 200px;border: 1px #0c0c0c solid;border-radius: 3px;height: 36px;">'+jQuery("#assignuserroles").html()+'</select></p>',
+        content: '<p><h3 style="text-align:center;">Do you want to approve this user? This will send them a welcome email.</h3></p><p style="text-align:center;">Here you can assign a level to this user. IMPORTANT: If you leave as "Unassigned", this user will be prompted to purchase a package before gaining full access to ExpoGenie.</p><p style="text-align:center;"><strong>Assign Level :  </strong> <select id="selectassignlevel" style="width: 200px;border: 1px #0c0c0c solid;border-radius: 3px;height: 36px;">'+jQuery("#assignuserroles").html()+'</select></p>',
         confirmButton: 'Yes, approve it!',
         cancelButton: 'No, cancel please!',
        

@@ -74,7 +74,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
 
                         <div class="col-sm-9">
 
-                            <button type="submit"    id="uploadstatus" class="btn btn-inline mycustomwidth btn-success" value="Upload">Upload</button>
+                            <button type="submit"    id="uploadstatus" class="btn btn-inline mycustomwidth btn-success" value="Upload">Next</button>
 
 
                         </div>

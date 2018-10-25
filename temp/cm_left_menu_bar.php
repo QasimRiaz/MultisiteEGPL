@@ -10,9 +10,12 @@ $expogeniefloorplanstatus = $oldvalues['ContentManager']['expogeniefloorplan'];
 $site_url  = get_site_url();
 $blog_title = get_bloginfo( 'name' );
 $user_id = get_current_user_id();
+
 $user_blogs = get_blogs_of_user( $user_id );
 
-$blog_list = get_blog_list( 0, 'all' );
+$blog_id2 = get_current_blog_id();
+
+
 ?>
 
 
@@ -73,6 +76,10 @@ $blog_list = get_blog_list( 0, 'all' );
                                             <i class="font-icon fa fa-gears"></i>
                                             <span class="lbl">Settings</span>
                                         </a>
+                                        <a class="dropdown-item" href="<?php echo $site_url; ?>/sync-to-floorplan/">
+                                            <i class="font-icon fa fa-refresh"></i>
+                                            <span class="lbl">Sync to ConvoMaps</span>
+                                        </a>
                                         <a class="dropdown-item" href="<?php echo $site_url; ?>/change-password/">
                                             <i class="font-icon fa fa-lock"></i>
                                             <span class="lbl">Change Password</span>
@@ -94,7 +101,12 @@ $blog_list = get_blog_list( 0, 'all' );
                                         
                                         <div class="dropdown-header">Switch Site</div>
                                         
-                                        <?php foreach ($user_blogs as $blog_id) { 
+                                        <?php 
+                                        
+                                        
+                                       
+                                        
+                                        foreach ($user_blogs as $blog_id) { 
                                             
                                             $sitename = $blog_id->blogname;
                                              if($blog_id->userblog_id != 1){
@@ -192,7 +204,7 @@ $blog_list = get_blog_list( 0, 'all' );
 	            <li class="mythemestyle">
                            <a href="<?php echo $site_url; ?>/create-user/">
                                <i class="font-icon fa fa-user-plus"></i>
-	                    <span class="lbl menumargine">New User</span>
+	                    <span class="lbl menumargine">Add New User</span>
                             </a>
                             
                    </li>
@@ -204,16 +216,11 @@ $blog_list = get_blog_list( 0, 'all' );
 	                    <span class="lbl menumargine">Bulk Import Users</span>
 	                </a>
                         </li>
-                            <li class="mythemestyle">
-	                <a href="<?php echo $site_url; ?>/sync-to-floorplan/">
-	                  <i class="font-icon fa fa-refresh"></i>
-	                    <span class="lbl menumargine">Sync To Floorplan</span>
-	                </a>
-	            </li> 
+                           
                      <li class="mythemestyle">
 	                <a href="<?php echo $site_url; ?>/review-registration/">
 	                  <i class="font-icon fa fa-eye"></i>
-	                    <span class="lbl menumargine">Review Registrations</span>
+	                    <span class="lbl menumargine">Review Applicants</span>
 	                </a>
 	            </li> 
                     
@@ -238,16 +245,16 @@ $blog_list = get_blog_list( 0, 'all' );
 	                    <span class="lbl menumargine">Content Editor</span>
 	                </a>
 	            </li>
-                    <a href="<?php echo $site_url; ?>/admin-settings/">
+<!--                    <a href="<?php //echo $site_url; ?>/admin-settings/">
 	                  <i class="font-icon fa fa-gears"></i>
 	                    <span class="lbl menumargine">Header Image</span>
-	                </a>
+	                </a>-->
                     </ul>
                 </li>
                 <li class="mythemestyle with-sub">
 	            <span>
 	                 <i style="color:#004598 !important;" class="font-icon fa fa-plus-square"></i>
-	                <span class="lbl">Tasks</span>
+	                <span class="lbl">Levels & Tasks</span>
 	            </span>
                     <ul class="mynav">
                         <li class="mythemestyle"> 
@@ -295,7 +302,7 @@ $blog_list = get_blog_list( 0, 'all' );
                        <li class="mythemestyle">
 	                <a href="<?php echo $site_url; ?>/manage-products/">
 	                  <i class="font-icon fa fa-bars"></i>
-	                    <span class="lbl menumargine">Manage Products</span>
+	                    <span class="lbl menumargine">Manage Shop</span>
 	                </a>
                         </li>
                     </ul>
@@ -327,5 +334,11 @@ $blog_list = get_blog_list( 0, 'all' );
                
  </ul>
 
-	  
-	</nav><!--.side-menu-->
+</nav><!--.side-menu-->
+
+
+<?php 
+
+
+
+switch_to_blog( $blog_id2 );?>

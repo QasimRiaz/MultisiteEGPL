@@ -28,11 +28,11 @@
         
         
 <!--        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/exporting.js?v=2.95"></script>-->
-        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/contentmanager.js?v=3.01"></script>
+        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/contentmanager.js?v=3.04"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/jquery.watable.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bootstrap-datepicker.min.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bootstrap-multiselect.js?v=2.95"></script>
-        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bulk-email.js?v=2.015"></script>
+        <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bulk-email.js?v=2.016"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/jquery-confirm.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/passwordstrength.js?v=2.95"></script>
         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/taskmanager.js?v=2.95"></script>
@@ -48,7 +48,7 @@
       
         <script src='/wp-content/plugins/EGPL/js/randomColor.js?v=2.95'></script>
         <script src='/wp-content/plugins/EGPL/js/jquery.ajax-progress.js?v=2.95'></script>
-         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bulk_edit_task.js?v=2.95"></script>
+         <script type="text/javascript" src="/wp-content/plugins/EGPL/js/bulk_edit_task.js?v=2.16"></script>
          <script type="text/javascript" src="/wp-content/plugins/EGPL/js/moment.min.js?v=2.95"></script>
          
 	 <?php
@@ -73,7 +73,7 @@
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script>
 jQuery(document).ready(function() {
-    
+   
     jQuery('[data-toggle="tooltip"]').tooltip(); 
 jQuery('.panel').lobiPanel({
     reload: false,
@@ -157,7 +157,7 @@ tinymce.init({
 
 </script>
         
-	<script>
+<script>
           
           console.log(window.location.protocol + "//" + window.location.host + this.location.pathname);
           jQuery('a[href="' + window.location.protocol + "//" + window.location.host + this.location.pathname + '"]').parents('li').addClass('active');

@@ -112,7 +112,7 @@ jQuery(window).load(function() {
         var col3 = '<div class="topmarrginebulkedit"><select  data-toggle="tooltip" title="Select Type" class="select2 bulktasktypedrop" id="bulktasktype_'+uniquecode+'" data-placeholder="Select Type" data-allow-clear="true">'+tasktypedata+'</select></div><div class="bulktasktype_'+uniquecode+'" style="display: none;margin-top:10px;margin-bottom: 10px;" ><input type="text"  class="form-control" name="linkurl" placeholder="Link URL" title="Link URL"id="row-'+uniquecode+'-linkurl" ><br><input type="text"  class="form-control" name="linkname" placeholder="Link Name" title="Link Name" id="row-'+uniquecode+'-linkname"></div><div class="dbulktasktype_'+uniquecode+'" style="display: none;margin-top:10px;margin-bottom: 10px;" > <input type="text"  class="form-control" name="dropdownvalues" placeholder="Comma separated list of values" title="Comma separated list of values"  id="row-'+uniquecode+'-dropdownvlaues" ></div>';
         var col4 = '<input  data-toggle="tooltip" title="Due Date" placeholder="Due Date" id="row-'+uniquecode+'-duedate" style="padding-left: 13px;margin-top: 10px;margin-bottom: 10px;" type="text" class="form-control datepicker" name="datepicker" >';
         var col5 = '<div class="addscrol topmarrginebulkedit"><select data-toggle="tooltip" class="select2" id="row-'+uniquecode+'-levels" data-placeholder="Select Levels" title="Select Levels" data-allow-clear="true"  multiple="multiple">'+taskroledata+'</select><br><select data-placeholder="Select Users" title="Select Users" id="row-'+uniquecode+'-userid" data-allow-clear="true"  class="select2" multiple="multiple">'+taskuseriddata+'</select> <br></div>';
-        var col6 = '<br><div class="addscrol"><div id="row-'+uniquecode+'-descrpition" class="edittaskdiscrpition_'+uniquecode+'"></div><p ><i class="font-icon fa fa-edit" id="taskdiscrpition_'+uniquecode+'" title="Edit your task description"style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton(this)"></i><span id="desplaceholder-'+uniquecode+'"style="margin-left: 10px;color:gray;">Description</span></p></div></div>';
+        var col6 = '<br><div class="addscrol"><div id="row-'+uniquecode+'-descrpition" class="edittaskdiscrpition_'+uniquecode+'"></div><p ><i class="font-icon fa fa-edit" id="taskdiscrpition_'+uniquecode+'" title="Edit your task specifications"style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton(this)"></i><span id="desplaceholder-'+uniquecode+'"style="margin-left: 10px;color:gray;">Specifications</span></p></div></div>';
                   
        t.row.add( [
             col1,
@@ -177,7 +177,7 @@ jQuery(window).load(function() {
             '<input placeholder="Task Due Date" style="margin-top: 10px;margin-bottom: 10px;" type="text" class="form-control datepicker" name="datepicker" value="">',
             '<input placeholder="Task Attributes" style="margin-top: 10px;margin-bottom: 10px;" name="attribure" class="form-control" id="attribure">',
             '<div class="topmarrginebulkedit"><select class="select2 special'+newfieldtask+'" data-placeholder="Select Levels" data-allow-clear="true"  multiple="multiple"><option>All</option><option>Admin</option><option>Content Manager</option><option>Gold</option><option>Sliver</option> </select><br><select data-placeholder="Select Users" data-allow-clear="true"  class="select2 special'+newfieldtask+'" multiple="multiple"><option>testuser1@gmail.com</option><option>testuser2@gmail.com</option><option>testuser4@gmail.com</option><option>testuser5@gmail.com</option> <option>testuser3@gmail.com</option></select> <br></div>',
-            '<div class=""><br><p>Upload Task Decrpition</p><p ><i title="Edit your task description" class="font-icon fa fa-edit" style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton()"></i></p></div>'
+            '<div class=""><br><p>Upload Task Decrpition</p><p ><i title="Edit your task specifications" class="font-icon fa fa-edit" style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton()"></i></p></div>'
         ] ).draw().nodes().to$().addClass("bulkaddnewtask");
         
         
@@ -326,7 +326,7 @@ function bulktask_descripiton(e){
       
         var updatedescripiton = jQuery.confirm({
             
-        title: 'Task Description',
+        title: 'Task Specifications',
         content: '<textarea name="taskdescrpition" class="taskdescrpition"  >'+descrpition+'</textarea>',
         confirmButton: 'Update',
         cancelButton: 'Close',
@@ -574,22 +574,64 @@ function saveallbulktask(){
     var taskdataupdate = {};
     var requeststatus = 'stop';
     var errormsg= "";
+    var titlemsg = "";
     var specialcharacterstatus = false;
     if(t.rows().data()['length'] == 0 ){
         var requeststatus = 'update';
     }else{
+    
+    
     
     jQuery( ".saveeverything" ).each(function( index ) {
       
      
         
     var taskid = jQuery( this ).attr('id');
-    
+    var taskLabelcheck = jQuery( '#row-'+taskid+'-title' ).val();
+     
+     
+       var status = 'noduplicate';
+       jQuery( ".saveeverything" ).each(function( index2 ) {
+            
+            var taskid2 = jQuery( this ).attr('id');
+            var taskLabelcompare = jQuery( '#row-'+taskid2+'-title' ).val();
+             
+            if(taskid != taskid2){
+                
+               
+                if(taskLabelcheck == taskLabelcompare){
+                    
+                    console.log(taskLabelcompare +'=='+ taskLabelcheck);
+                    status = 'duplicate';
+                    return false;
+                }
+            }
+           
+       });
+       if(status == 'duplicate'){
+            console.log(status);
+            console.log(taskid);
+            jQuery('#'+taskid).parent('div').parent('td').parent('tr').addClass('emptyfielderror');
+       
+            requeststatus = 'stop';
+            errormsg = "More then one task have same title.Please prevent duplicate task titles.";
+            titlemsg = 'Duplicate Task Title';
+            return false;
+           
+           
+       }
+     
+     
+     
+     
+     
     
     var str = jQuery( '#row-'+taskid+'-title' ).val();
     if(jQuery.trim( str ).length !=0  && jQuery( '#bulktasktype_'+taskid ).val() !="" && jQuery( '#row-'+taskid+'-duedate' ).val() !="" && jQuery( '#row-'+taskid+'-levels' ).val()!=null){
         
-        
+      if(jQuery( '#row-'+taskid+'-title' ).val() !='Company Name'){
+          
+      
         if(/^[ A-Za-z0-9_?()\-]*$/.test(str) == false) {
            specialcharacterstatus = true;
         }else{
@@ -665,25 +707,39 @@ function saveallbulktask(){
          jQuery('#'+taskid).parent('div').parent('td').parent('tr').addClass('emptyfielderror');
        
          requeststatus = 'stop';
-         errormsg = 'Invalid characters used in task title(s). Please remove and try again.';
+         errormsg = "Uh-oh, looks like you're using special characters (i.e. '&', ',', etc) that Task titles don't support. Please remove any special characters from the title and try again.";
+         titlemsg = 'Unsupported Characters';
          return false;
      }
+ }else{
      
+        jQuery('#'+taskid).parent('div').parent('td').parent('tr').addClass('emptyfielderror');
+       
+         requeststatus = 'stop';
+         errormsg = "More then one task have same title.Please prevent duplicate task titles.";
+         titlemsg = 'Duplicate Task Title';
+         return false;
+     
+     
+     
+     
+ }
      }else{
          
          
          jQuery('#'+taskid).parent('div').parent('td').parent('tr').addClass('emptyfielderror');
        
          requeststatus = 'stop';
+         titlemsg = 'Error';
          errormsg = 'Some required fields are empty.';
          return false;
      }
    
         
     });
-}
-    
-   
+
+}   
+
     
  if(requeststatus == 'update'){ 
     var url = currentsiteurl+'/';
@@ -710,8 +766,8 @@ function saveallbulktask(){
                 },
         function(isConfirm) {
             jQuery("body").css({'cursor':'wait'});
-            
-             document.location.href = currentsiteurl+'/dashboard'
+            location.reload();
+            // document.location.href = currentsiteurl+'/dashboard'
         });
                 
                 
@@ -728,9 +784,9 @@ function saveallbulktask(){
     }else{
         jQuery('body').css('cursor', 'default');
         swal({
-            title: "Error",
-	    text: errormsg,
-            type: "error",
+            title:titlemsg,
+	    text:errormsg,
+            type:"warning",
 	    confirmButtonClass: "btn-danger",
 	    confirmButtonText: "Ok"
 	}

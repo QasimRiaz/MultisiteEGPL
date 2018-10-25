@@ -72,7 +72,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                     <a class="nav-link" href="#tabs-1-tab-2" role="tab" data-toggle="tab">
                                         <span class="nav-link-in">
                                             <i class="fa fa-filter"></i>
-                                            Define Report
+                                            Customize Report
                                         </span>
                                     </a>
                                 </li>
@@ -95,7 +95,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
 									
                                                                     <select style="width:100%;height:38px;"class="form-control" onchange="loadorderreport('')" id="loadorderreport">
                                                                             <option disabled selected hidden>Load a Report</option>
-                                                                            <option value="defult"></option>
+                                                                           
                                                                             <option value="defult">Save Current Template As</option>
                                                                             <optgroup label="Saved Templates" id="loadorderreportlist">
 
@@ -200,7 +200,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
 
                                                     <select style="width:100%;height:38px;" class="form-control" onchange="customeloadorderreport()" id="customeloadorderreport">
                                                         <option disabled selected hidden>Load a Report</option>
-                                                        <option value="defult"></option>
+                                                        <option value="" selected="selected">All Orders</option>
                                                              <?php
                                                                                 foreach ($order_reportsaved_list as $key => $value) {
                                                                                       if(isset($_GET['orderreport'])){
@@ -218,6 +218,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                                                                    
                                                                                 }
                                                                 ?>
+                                                       
                                                     </select>
                                                 </fieldset>
                                             </div>

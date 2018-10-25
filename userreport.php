@@ -89,12 +89,12 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
        $user_id = register_new_user( $username, $email );//wp_create_user($username, $random_password, $email);
        
        if ( ! is_wp_error( $user_id ) ) {
-       
+        
        $result=$user_id;
        $loggin_data['created_id']=$result;
        $message['user_id'] = $user_id;
        $message['msg'] = 'User created';
-       $message['showmsg'] = 'Registration request has been sent successfully';
+       $message['showmsg'] = 'Your submission has been received and is being reviewed';
        
        $message['userrole'] = $role;
       
@@ -106,7 +106,9 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
        
        add_new_sponsor_metafields($user_id,$meta_array,$role);
        $send_email_type = 'selfsignuprequest';
-       selfsign_registration_emails($user_id,$send_email_type);
+       $responce = selfsign_registration_emails($user_id,$send_email_type);
+       
+       
             
              
     }else{
@@ -149,7 +151,7 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
                 selfsign_registration_emails($user_id,$send_email_type);
                
                 $message['msg'] = 'User created';
-                $message['showmsg'] =  'User added to this blog.';
+                $message['showmsg'] =  'Your submission has been received and is being reviewed.';
                 
                 
            
@@ -160,8 +162,12 @@ if ($_GET['contentManagerRequest'] == 'updateuserforthissite') {
        
         
     }
-   
+    
     $loggin_data['msg']=$message['msg'];
+    
+   
+    
+    
     
     contentmanagerlogging_file_upload ($lastInsertId,serialize($loggin_data));
     echo json_encode($message);
@@ -1464,13 +1470,13 @@ function approve_selfsign_user($user_id,$user_assignrole){
             
              update_user_option($user_id, 'exhibitor_map_dynamics_ID', $result->results->Exhibitor_ID);
           
-             $mapdynamicsstatus = 'This update has also been synced to floorplan';
+             $mapdynamicsstatus = '';
             
         }else{
             
             $sync_map_dynamics_message = $result->status_details;
           
-            $mapdynamicsstatus = 'However, this update could not be synced to floorplan';
+            $mapdynamicsstatus = '';
         }
         
         
@@ -1497,6 +1503,8 @@ function approve_selfsign_user($user_id,$user_assignrole){
 }
 
 function selfsign_registration_emails($user_id,$send_email_type){
+        
+        require_once 'Mandrill.php';
     
         $user = get_userdata($user_id);
         $email = $user->user_email;
@@ -1506,7 +1514,7 @@ function selfsign_registration_emails($user_id,$send_email_type){
         $all_meta_for_user = get_user_meta( $user_id );
         $site_url = get_option('siteurl' );
         $site_title=get_option( 'blogname' );
-        
+       
         //$settitng_key='AR_Contentmanager_Email_Template_welcome';
         //$sponsor_info = get_option($settitng_key);
         
@@ -1541,14 +1549,38 @@ function selfsign_registration_emails($user_id,$send_email_type){
         }
        
      
+          
+        $welcomememailreplayto = get_option('AR_Contentmanager_Email_Template_welcome');
+        $replaytoemailadd = $welcomememailreplayto['welcome_email_template']['replaytoemailadd'];
+        $oldvalues = get_option( 'ContenteManager_Settings' );
+        $mandrillKeys = $oldvalues['ContentManager']['mandrill'];
+        $to_message_array[]=array('email'=>$email,'name'=>$all_meta_for_user[$site_prefix.'first_name'][0],'type'=>'to');
+      
+     
+        $mandrill = new Mandrill($mandrillKeys);
         
-        $headers []= 'From: '.$formemailandtitle.' <'.$formemail.'>' . "\r\n";
-        $headers []= 'Reply-To: '.$formemail;
       
-	add_filter( 'wp_mail_content_type', 'set_html_content_type_utf8' );
-        wp_mail($email, $subject_body, $body_message,$headers);
-        remove_filter( 'wp_mail_content_type', 'set_html_content_type_utf8' );
-      
+        $message = array(
+
+             'html' => $body_message,
+             'text' => '',
+             'subject' => $subject_body,
+             'from_email' => $formemail,
+             'from_name' => $formemailandtitle,
+             'to' => $to_message_array,
+             'headers' => array('Reply-To' => $formemail),
+             'bcc_address'=>$replaytoemailadd,
+             'track_opens' => true,
+             'track_clicks' => true
+
+
+         );
+     
+    $async = false;
+    $ip_pool = 'Main Pool';
+  
+    $result = $mandrill->messages->send($message, $async, $ip_pool, $send_at);
+  
     
 }
 
@@ -1703,12 +1735,12 @@ function updateuserforthissite($userinfo){
         if($result->status == 'success'){
             
              update_user_option($user_id, 'exhibitor_map_dynamics_ID', $result->results->Exhibitor_ID);
-             $mapdynamicsstatus['synctofloorplan'] = 'This update has also been synced to floorplan';
+             $mapdynamicsstatus['synctofloorplan'] = '';
             
         }else{
             
             $sync_map_dynamics_message = $result->status_details;
-            $mapdynamicsstatus['synctofloorplan'] = 'However, this update could not be synced to floorplan';
+            $mapdynamicsstatus['synctofloorplan'] = '';
         }
         
        }else{

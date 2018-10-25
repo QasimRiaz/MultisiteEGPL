@@ -21,7 +21,7 @@
 	display: inline-block;
 	outline: none;
 	border: none;
-	background: #f26522;
+	background: #1388CA;
 	color: #fff;
 	
 	
@@ -593,7 +593,7 @@
 
 .disableremovebutton{
     
-    background-color: #c1c1c1 !important;
+    background-color: #95d35f !important;
     height: 38px !important;
     font-size: 1em !important;
     color: white !important;

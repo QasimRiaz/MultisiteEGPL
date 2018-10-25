@@ -177,6 +177,8 @@ function loadorderreport() {
         $all_posts = $query->posts;
         
         
+        
+        
         $columns_headers = [];
         $columns_rows_data = [];
 
@@ -273,7 +275,7 @@ function loadorderreport() {
         $columns_list_order_report_postmeta[18]['type'] = 'num-fmt';
         $columns_list_order_report_postmeta[18]['key'] = 'Net Revenue From Stripe';
 
-        $columns_list_order_report_postmeta[19]['title'] = 'Paymnet Date';
+        $columns_list_order_report_postmeta[19]['title'] = 'Payment Date';
         $columns_list_order_report_postmeta[19]['type'] = 'date';
         $columns_list_order_report_postmeta[19]['key'] = '_paid_date';
 
@@ -312,6 +314,10 @@ function loadorderreport() {
 
             $header_array = get_object_vars($single_post);
             $post_meta = get_post_meta($header_array['ID']);
+            
+            
+            
+            
             $column_row;
             ksort($post_meta);
             foreach ($columns_list_order_report as $col_keys_index => $col_keys_title) {
@@ -345,6 +351,11 @@ function loadorderreport() {
                     $column_row[$columns_list_order_report_postmeta[$col_keys_index]['title']] = $newformat;
                 } else if ($columns_list_order_report_postmeta[$col_keys_index]['key'] == 'Products' || $columns_list_order_report_postmeta[$col_keys_index]['key'] == 'Account Holder Email') {
                     
+                }else if ($columns_list_order_report_postmeta[$col_keys_index]['key'] == '_order_total' ) {
+                    
+                     $column_row[$columns_list_order_report_postmeta[$col_keys_index]['title']] = round($post_meta[$columns_list_order_report_postmeta[$col_keys_index]['key']][0]);
+                     $totalAmountOrder = round($post_meta[$columns_list_order_report_postmeta[$col_keys_index]['key']][0]);
+                     
                 } else {
                     if ($columns_list_order_report_postmeta[$col_keys_index]['type'] == 'num' || $columns_list_order_report_postmeta[$col_keys_index]['type'] == 'num-fmt') {
 
@@ -365,8 +376,10 @@ function loadorderreport() {
             $products = $wpdb->get_results($get_items_sql);
             $order_productsnames = "";
             foreach ($products as $single_product => $productname) {
-
-                $order_productsnames.= $productname->order_item_name . '<br>';
+                
+                
+                
+                $order_productsnames.= $productname->order_item_name.' (x'.$productname->Qty.')<br>';
             }
             $column_row['Products'] = $order_productsnames;
             $column_row['Account Holder Email'] = $accountholder_email;
@@ -501,8 +514,8 @@ function manageproducts() {
         foreach ($all_products->products as $single_product) {
 
            
-            
-            
+           
+         
             
             
            $action_data = '<div style="width: 140px !important;"class = "hi-icon-wrap hi-icon-effect-1 hi-icon-effect-1a"><i data-toggle="tooltip" class="hi-icon fa fa-clone saveeverything" id = "' . $single_product->id . '" onclick="createproductclone(this)" title="" data-original-title="Create a clone"></i><a href="'.$site_url.'/add-new-product/?productid='. $single_product->id .'"  ><i data-toggle = "tooltip" title = ""  id = "' . $single_product->id . '" class = "hi-icon fusion-li-icon fa fa-pencil-square fa-2x" data-original-title = "Edit Product"></i></a><i   id = "' . $single_product->id . '" data-toggle = "tooltip" title = "" onclick="deleteproduct(this)" class = "hi-icon fusion-li-icon fa fa-times-circle fa-2x" data-original-title = "Delete Product"></i><a href="'.$single_product->permalink.'" target="_blank" ><i onclick = "delete_product(this)" id = "' . $single_product->id . '" data-toggle = "tooltip" title = "" class = "hi-icon fusion-li-icon fa fa-eye fa-2x" data-original-title = "View Product" ></i></a></div>';
@@ -524,7 +537,7 @@ function manageproducts() {
                 
                 
                 
-                
+              
                 
                 $findingvaluekey = $columns_list_order_report[$col_keys_index]['key'];
                 
@@ -574,6 +587,7 @@ function manageproducts() {
 
 
             array_push($columns_rows_data, $column_row);
+        
         }
 
         $orderreport_all_col_rows_data['columns'] = $columns_headers;
@@ -602,10 +616,12 @@ function addnewproducts($addnewproduct_data) {
         global $wpdb;
         $user_ID = get_current_user_id();
         $user_info = get_userdata($user_ID);
+         $selectedtaskArray['selectedtasks'] = json_decode(stripslashes($_POST['selectedtaskvalues']), true);
         $lastInsertId = contentmanagerlogging('Add new Product', "Admin Action", $addnewproduct_data, $user_ID, $user_info->user_email, "pre_action_data");
         $productimage=$_FILES['productimage'];
         $price = $addnewproduct_data['pprice'];
         $roleassign = $addnewproduct_data['roleassign'];
+        $menu_order = $addnewproduct_data['menu_order'];
         $url = get_site_url();
         
         
@@ -680,7 +696,7 @@ function addnewproducts($addnewproduct_data) {
         $objProduct->set_backorders('no'); //Set backorders.                                        | string $backorders Options: 'yes', 'no' or 'notify'.
         $objProduct->set_sold_individually(FALSE);
         $objProduct->set_tax_class($roleassign); 
-
+        $objProduct->set_menu_order($menu_order); 
         
         
         
@@ -694,9 +710,9 @@ function addnewproducts($addnewproduct_data) {
         $objProduct->set_image_id($productpicrul); //Set main image ID.                                         | int|string $image_id Product image id.
         //Set gallery attachment ids.                       | array $image_ids List of image ids.
         $new_product_id = $objProduct->save(); //Saving the data to create new product, it will return product ID.
-        
-        
-            
+        if(!empty($selectedtaskArray)){
+            update_post_meta( $new_product_id, 'seletedtaskKeys', $selectedtaskArray );
+        }
             contentmanagerlogging_file_upload($lastInsertId, serialize($new_product_id));
             echo 'created successfully';
 
@@ -725,6 +741,11 @@ function updateproducts($updateproducts_data) {
         
         $user_ID = get_current_user_id();
         $user_info = get_userdata($user_ID);
+        $selectedtaskArray['selectedtasks'] = json_decode(stripslashes($_POST['selectedtaskvalues']), true);
+        
+        
+      
+        
         
         $lastInsertId = contentmanagerlogging('Update Product', "Admin Action", serialize($updateproducts_data), $user_ID, $user_info->user_email, "pre_action_data");
         
@@ -733,6 +754,8 @@ function updateproducts($updateproducts_data) {
         $price = $updateproducts_data['pprice'];
         $productid = $updateproducts_data['productid'];
         $roleassign = $updateproducts_data['roleassign'];
+        $menu_order = $updateproducts_data['menu_order'];
+        
         $rootsite_url =  network_site_url();
         if(!empty($productimage)){
         $productpicrul = product_file_upload($productimage);
@@ -797,7 +820,7 @@ function updateproducts($updateproducts_data) {
               
         //$objProduct = new WC_Product();
         $objProduct = wc_get_product( $productid );
-        
+       
         
         $objProduct->set_name($updateproducts_data['ptitle']); //Set product name.
         $objProduct->set_status($updateproducts_data['pstatus']); //Set product status.
@@ -809,7 +832,7 @@ function updateproducts($updateproducts_data) {
         $objProduct->set_stock_quantity($updateproducts_data['pquanitity']); //Set number of items available for sale.
         $objProduct->set_stock_status($instock); //Set stock status.                               | string $status 'instock', 'outofstock' and 'onbackorder'
         $objProduct->set_tax_class($roleassign); 
-        
+        $objProduct->set_menu_order($menu_order); 
        
         
         
@@ -820,7 +843,12 @@ function updateproducts($updateproducts_data) {
         $objProduct->set_image_id($productpicrul); //Set main image ID.                                         | int|string $image_id Product image id.
         //Set gallery attachment ids.                       | array $image_ids List of image ids.
         $new_product_id = $objProduct->save();
-      
+        if(!empty($selectedtaskArray)){
+            update_post_meta( $new_product_id, 'seletedtaskKeys', $selectedtaskArray );
+        }
+        
+        
+        
             contentmanagerlogging_file_upload($lastInsertId, serialize($new_product_id));
             $message = 'update successfully';
             echo $message;

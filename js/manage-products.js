@@ -6,6 +6,12 @@ var manageproducts;
 var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 jQuery(document).ready(function () {
+    
+    
+    
+    jQuery('#selectedtasks').select2();
+    
+    
     if ( window.location.href.indexOf("manage-products") > -1)
     {
     jQuery("body").css({'cursor': 'wait'});
@@ -180,6 +186,11 @@ function add_new_product(){
     var pstatus = jQuery("#pstatus option:selected").val(); 
     var pcategories = jQuery("#pcategories option:selected").val();
     var pcategoriesname = jQuery("#pcategories option:selected").text();
+    var menu_order = jQuery("#menu_order").val();
+    var selectedtaskvalues = jQuery('#selectedtasks').select2("val");
+    
+    console.log(selectedtaskvalues);
+    
     
     if(pcategoriesname == 'Product'){
         
@@ -201,8 +212,11 @@ function add_new_product(){
     var urlupdateproduct = url + 'wp-content/plugins/EGPL/orderreport.php?contentManagerRequest=updateproducts';
     
     var data = new FormData();
-
-    
+    if(selectedtaskvalues != 'null'){
+        data.append('selectedtaskvalues', JSON.stringify(selectedtaskvalues));
+    }else{
+         data.append('selectedtaskvalues', '');
+    }
     data.append('ptitle', ptitle);
     data.append('pprice', pprice);
     data.append('pquanitity', pquanitity);
@@ -212,6 +226,7 @@ function add_new_product(){
     data.append('pdescrpition', pdescrpition);
     data.append('pshortdescrpition', pshortdescrpition);
     data.append('roleassign', roleassign);
+    data.append('menu_order', menu_order);
     
     if(productid !=""){
         var updateproductimage = jQuery('#updateproductimage')[0].files[0];

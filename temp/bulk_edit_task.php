@@ -7,11 +7,13 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
     $test = 'custome_task_manager_data';
     $result = get_option($test);
     //$result = json_decode(json_encode($result), true);
-    //echo '<pre>';
-    //print_r($result);exit;
+   
     
     $test_setting = 'ContenteManager_Settings';
     $plug_in_settings = get_option($test_setting);
+    
+   //  echo '<pre>';
+    //print_r($plug_in_settings);exit;
     
     $fields = array( 'ID','user_email' );
     $args = array(
@@ -69,7 +71,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                 <div class="tbl">
                     <div class="tbl-row">
                         <div class="tbl-cell">
-                            <h3>Bulk Edit Tasks</h3>
+                            <h3>Manage Tasks</h3>
 
                         </div>
                     </div>
@@ -156,7 +158,7 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                     <th >Type</th>
                                     <th >Due Date</th>
                                     <th >User/Level</th>
-                                    <th >Description</th>
+                                    <th >Specifications</th>
 
                                 </tr>
                             </thead>
@@ -276,13 +278,13 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
                                             <div class="addscrol">
                                                 <div id="row-<?php echo $task_code; ?>-descrpition" class='edittaskdiscrpition_<?php echo $task_code; ?>'><?php echo $value['descrpition']; ?></div>
 
-                                                <p ><i class="font-icon fa fa-edit" id='taskdiscrpition_<?php echo $task_code; ?>'title="Edit your task description" data-toggle="tooltip" style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton(this)"></i>
+                                                <p ><i class="font-icon fa fa-edit" id='taskdiscrpition_<?php echo $task_code; ?>'title="Edit your task specifications" data-toggle="tooltip" style="cursor: pointer;color: #0082ff;"onclick="bulktask_descripiton(this)"></i>
         <?php if (!empty($value['descrpition'])) { ?>
 
-                                                        <span id="desplaceholder-<?php echo $task_code; ?>" style="display:none;margin-left: 10px;color:gray;">Description</span>
+                                                        <span id="desplaceholder-<?php echo $task_code; ?>" style="display:none;margin-left: 10px;color:gray;">Specifications</span>
         <?php } else { ?>
 
-                                                        <span id="desplaceholder-<?php echo $task_code; ?>" style="margin-left: 10px;color:gray;">Description</span>
+                                                        <span id="desplaceholder-<?php echo $task_code; ?>" style="margin-left: 10px;color:gray;">Specifications</span>
         <?php }; ?>
                                                 </p>
                                             </div> 

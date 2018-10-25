@@ -20,7 +20,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                 <div class="tbl">
                     <div class="tbl-row">
                         <div class="tbl-cell">
-                            <h3>Manage Products</h3>
+                            <h3>Manage Shop</h3>
                            
                         </div>
                     </div>
@@ -29,20 +29,20 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
 
             <div class="box-typical box-typical-padding">
                 <p>
-                This is where you can manage and create Products or Packages. A Product is anything you want to make available for purchase for all your users in the Shop area of the portal. A Package is something purchased that will assign OR re-assign the users Level upon purchase.
+                This is where you can manage and create Add-Ons or Packages. An Add-On is anything you want to make available for purchase for all your users in the Add-On area of the portal. A Package is something purchased that will assign OR re-assign the users Level upon purchase.
                 </p>
 
                 <h5 class="m-t-lg with-border"></h5>
                  <div class="form-group row">
                                  
                                     <div class="col-sm-3" >
-                                            <a class="btn btn-lg mycustomwidth btn-success" href="<?php echo $site_url;?>/add-new-product/">Add New Product</a>
+                                            <a class="btn btn-lg mycustomwidth btn-success" href="<?php echo $site_url;?>/add-new-product/?producttype=addons">Create Add-On</a>
                                         
                                         
                                     </div>
                                     <div class="col-sm-3" >
                                             
-                                        <a class="btn btn-lg mycustomwidth btn-success" href="<?php echo $site_url;?>/add-new-product/?producttype=package">Add New Package</a>
+                                        <a class="btn btn-lg mycustomwidth btn-success" href="<?php echo $site_url;?>/add-new-product/?producttype=package">Create Package</a>
                                         
                                         
                                     </div>
@@ -79,7 +79,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                 <div class="tbl">
                     <div class="tbl-row">
                         <div class="tbl-cell">
-                            <h3>Product</h3>
+                            <h3>Shop Not Enabled</h3>
                            
                         </div>
                     </div>
@@ -90,7 +90,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
             <div class="box-typical box-typical-padding" >
                 <div class="form-group row">
                 
-                    <p class="col-sm-12 "><strong>Shop is not configured for this site. Please contact ExpoGenie.</strong></p>
+                    <p class="col-sm-12 "><strong>Hi There! It looks like the Shop module is not configured for this event. If you have questions about this, please contact us at support@expo-genie.com. Thank you!  </strong></p>
                
                 </div>
             </div>

@@ -26,4 +26,7 @@ if (!empty($_GET['fieldname'])) {
 
 
     header('Location: ' . $base_url . '/wp-content/plugins/EGPL/download-lib-one.php?cname='.$cname.'&zipname='.$cname.'_'.$filed_name.'&filename=' . $download_array);
+
+    
+    
 }

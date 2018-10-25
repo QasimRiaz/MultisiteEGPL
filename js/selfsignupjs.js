@@ -22,6 +22,55 @@ function selfisignupadd_new_sponsor(){
             data.append(jQuery(this).attr( "name" ), jQuery(this).val());
        });
        
+        jQuery('.mycustomedropdown').each(function() {
+           
+           
+           var ID = jQuery(this).attr( "id" );
+           var mydata = jQuery("#"+ID).val();
+           
+           console.log(mydata);
+           
+           
+           var selectedValues = "";
+           jQuery.each(mydata,function(index,value){
+               
+               console.log(value);
+                selectedValues += value+';';
+                
+           });
+           
+           
+           
+          data.append(jQuery(this).attr( "id" ), selectedValues);
+           
+           
+           
+       });
+       jQuery('.mycustomesingledropdown').each(function() {
+          
+          var ID = jQuery(this).attr( "id" );
+          var value = jQuery("#"+ID).val();
+          var selectedValues = "";
+          selectedValues += value+';'; 
+          data.append(jQuery(this).attr( "id" ), selectedValues); 
+           
+       });
+      
+       
+       jQuery('.mycustomcheckbox').each(function() {
+           
+            var ID = jQuery(this).attr( "id" );
+            if(jQuery(this).prop("checked")) {
+                data.append(jQuery(this).attr( "id" ), true);
+              } else {
+                 data.append(jQuery(this).attr( "id" ), false);
+              }
+           
+           
+       });
+       
+       
+       
        
        jQuery.ajax({
             url: urlnew,
@@ -31,7 +80,7 @@ function selfisignupadd_new_sponsor(){
             processData: false,
             type: 'POST',
             success: function(data) {
-                
+                console.log(data);
                var message = jQuery.parseJSON(data);
               
                
@@ -80,22 +129,4 @@ function selfisignupadd_new_sponsor(){
       
       
   }
-}
-
-function openpopup(){
-    
-    var url = currentsiteurl + "/";
-    jQuery('.fusion-header-wrapper').css("z-index", "9998");
-    
-    jQuery.confirm({
-            title: 'Floor Plan',
-            content:'<iframe height="600" src="'+url+'/floor-plan-viewer/" width="100%"  frameborder="0" allowfullscreen="allowfullscreen"></iframe>',
-            closeIcon: true,
-            columnClass: 'jconfirm-box-container-special',
-            confirmButton:false,
-            cancelButton:false,
-         });
-    
-    
-    
 }

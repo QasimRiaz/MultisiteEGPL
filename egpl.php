@@ -3,14 +3,14 @@
 
 /**
  * Plugin Name:       EGPL
- * Plugin URI:        https://github.com/QasimRiaz/EGPL
+ * Plugin URI:        https://github.com/QasimRiaz/MultisiteEGPL
  * Description:       EGPL
- * Version:           2.21
+ * Version:           1.00
  * Author:            EG
  * License:           GNU General Public License v2
  * Text Domain:       EGPL
  * Network:           true
- * GitHub Plugin URI: https://github.com/QasimRiaz/EGPL
+ * GitHub Plugin URI: https://github.com/QasimRiaz/MultisiteEGPL
  * Requires WP:       4.0
  * Requires PHP:      5.3
  */
@@ -333,6 +333,7 @@ if($_GET['contentManagerRequest'] == "bulkimportmappingcreaterequest") {
     $keys_string[]= 'site_title';
     $keys_string[]= 'create_password_url';
     $keys_string[]= 'user_login';
+    $keys_string[]= 'company_name';
     foreach ($additional_fields as $key=>$value){  
         if($additional_fields[$key]['type'] !='html'){
          $keys_string[] = $additional_fields[$key]['key'];
@@ -598,12 +599,12 @@ if ($_GET['contentManagerRequest'] == 'changepassword') {
             
              update_user_option($userid, 'exhibitor_map_dynamics_ID', $result->results->Exhibitor_ID);
          
-             $mapdynamicsstatus = 'This update has also been synced to floorplan';
+             $mapdynamicsstatus = '';
             
         }else{
             
             $sync_map_dynamics_message = $result->status_details;
-            $mapdynamicsstatus = 'However, this update could not be synced to floorplan';
+            $mapdynamicsstatus = '';
         }
         
         
@@ -691,12 +692,12 @@ if ($_GET['contentManagerRequest'] == 'changepassword') {
         if($result->status == 'success'){
             
              update_user_option($user_id, 'exhibitor_map_dynamics_ID', $result->results->Exhibitor_ID);
-             $mapdynamicsstatus = 'This update has also been synced to floorplan';
+             $mapdynamicsstatus = '';
             
         }else{
             
             $sync_map_dynamics_message = $result->status_details;
-            $mapdynamicsstatus = 'However, this update could not be synced to floorplan';
+            $mapdynamicsstatus = '';
         }
         
        }else{
@@ -774,12 +775,12 @@ if ($_GET['contentManagerRequest'] == 'changepassword') {
                     if($result->status == 'success'){
 
                          update_user_option($user_id, 'exhibitor_map_dynamics_ID', $result->results->Exhibitor_ID);
-                         $mapdynamicsstatus = 'This update has also been synced to floorplan';
+                         $mapdynamicsstatus = '';
 
                     }else{
 
                         $sync_map_dynamics_message = $result->status_details;
-                        $mapdynamicsstatus = 'However, this update could not be synced to floorplan';
+                        $mapdynamicsstatus = '';
                     }
         
                 }else{
@@ -926,6 +927,9 @@ try {
     $oldvalues = get_option( 'ContenteManager_Settings' );
     $mandrill = $oldvalues['ContentManager']['mandrill'];
     $mandrill = new Mandrill($mandrill);
+    
+   
+    
     $sendcustomewelcomeemail = $_POST['selectedtemplateemailname'];
     
     
@@ -1191,7 +1195,7 @@ try {
 <p>&nbsp;</p>'; 
   
    
-  
+   $get_currentsiteURl = get_site_url();
    $message = array(
         
         'html' => $html_body_message,
@@ -1208,8 +1212,8 @@ try {
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
-        'merge_vars' => $user_data_array
-        
+        'merge_vars' => $user_data_array,
+        "tags" => [$get_currentsiteURl],
         
     );
    
@@ -1415,6 +1419,7 @@ try {
    
   
  //  print_r($bcc);exit;
+   $get_currentsiteURl = get_site_url();
    $message = array(
         
         'html' => $body,
@@ -1430,8 +1435,8 @@ try {
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
-        'merge_vars' => $user_data_array
-        
+        'merge_vars' => $user_data_array,
+         "tags" => [$get_currentsiteURl]
         
     );
    
@@ -3450,8 +3455,8 @@ function add_contentmanager_js(){
      wp_enqueue_script('sweetalert', plugins_url('/EGPL/cmtemplate/js/lib/bootstrap-sweetalert/sweetalert.min.js'), array('jquery'));
      wp_enqueue_script('password_strength_cal', plugins_url('/js/passwordstrength.js', __FILE__), array('jquery'));
      
-     wp_enqueue_script( 'selfsignupjs', plugins_url('/EGPL/js/selfsignupjs.js'), array(), '1.2.7', true );
-      
+     wp_enqueue_script( 'selfsignupjs', plugins_url('/EGPL/js/selfsignupjs.js'), array(), '1.2.9', true );
+     wp_enqueue_script( 'jquery-confirm', plugins_url('/EGPL/js//jquery-confirm.js'), array(), '1.2.7', true );
       
      wp_enqueue_script('select2', plugins_url('/cmtemplate/js/lib/select2/select2.full.js', __FILE__), array('jquery'));
       //wp_enqueue_script('rolejs', plugins_url('/js/role.js', __FILE__), array('jquery'));
@@ -3467,7 +3472,8 @@ function my_contentmanager_style() {
     wp_enqueue_style('my-datepicker', plugins_url().'/EGPL/css/datepicker.css');
     wp_enqueue_style('jquery.dataTables', plugins_url().'/EGPL/css/jquery.dataTables.css');
     wp_enqueue_style('shCore', plugins_url().'/EGPL/css/shCore.css');
-    
+     wp_enqueue_style('jquery-confirm-css', plugins_url().'/EGPL/css/jquery-confirm.css');
+   
    
   
     wp_enqueue_style('my-datatable-tools', plugins_url().'/EGPL/css/dataTables.tableTools.css');
@@ -4795,9 +4801,9 @@ $blog_id =get_current_blog_id();
     
         $tablename = 'contentmanager_'.$blog_id.'_log';
     } 
-
+$_SERVER['currentuseremail'] = $email;
 $query = "INSERT INTO ".$tablename." (action_name, action_type,pre_action_data,user_id,user_email,result) VALUES (%s,%s,%s,%s,%s,%s)";
-$wpdb->query($wpdb->prepare($query, $acction_name, $action_type,$pre_action_data,$user_id,$email,$result));
+$wpdb->query($wpdb->prepare($query, $acction_name, $action_type,unserialize($pre_action_data),$user_id,$email,$result));
 $lastInsertId = $wpdb->insert_id;
 return $lastInsertId;
 }
@@ -4817,7 +4823,7 @@ global $wpdb;
  $wpdb->update( 
     $tablename, 
     array( 
-        'result' => $result  // string
+        'result' => unserialize($result)  // string
        
     ), 
     array( 'id' => $lastInsertId )
@@ -5115,7 +5121,7 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
 
        
         
-        
+   $get_currentsiteURl = get_site_url();
    $message = array(
 
         'html' => $html_body_message,
@@ -5132,8 +5138,8 @@ function custome_email_send($user_id,$userlogin='',$welcomeemailtemplatename='')
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
-        'merge_vars' => $user_data_array
-
+        'merge_vars' => $user_data_array,
+        "tags" => [$get_currentsiteURl]
 
     );
 
@@ -5548,15 +5554,16 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  
+                  $plaintext_pass=wp_generate_password( 8, false, false );
+                  wp_set_password( $plaintext_pass, $user_id );
+                  $status['userpass'] = $plaintext_pass;
               
               }
               
             
               add_new_sponsor_metafields($user_id,$meta_array,$role);
-              $plaintext_pass=wp_generate_password( 8, false, false );
-              wp_set_password( $plaintext_pass, $user_id );
-              $status['userpass'] = $plaintext_pass;
+              
+              
               
               
             }
@@ -5600,15 +5607,16 @@ function importbulkuseradd($username,$email,$firstname,$lastname,$role,$company_
                 
                   $t=time();
                   $meta_array['convo_welcomeemail_datetime']=$t*1000;
-                  
+                  $plaintext_pass=wp_generate_password( 8, false, false );
+                  wp_set_password( $plaintext_pass, $user_id );
+                  $status['userpass'] = $plaintext_pass;
               
               }
               
               add_user_to_blog($currentblogid, $user_id, $role);
               add_new_sponsor_metafields($user_id,$meta_array,$role);
-              $plaintext_pass=wp_generate_password( 8, false, false );
-              wp_set_password( $plaintext_pass, $user_id );
-              $status['userpass'] = $plaintext_pass;
+             
+             
               
             }    
             
@@ -5783,7 +5791,7 @@ try {
 //                $to_message_array[]=array('email'=>$cc_array[0],'name'=>'','type'=>'cc');
 //            }
 //        }
-   
+   $get_currentsiteURl = get_site_url();
    $message = array(
         
         'html' => $html_body_message,
@@ -5800,8 +5808,8 @@ try {
         'merge' => true,
         'merge_language' => 'mailchimp',
         'global_merge_vars' => $goble_data_array,
-        'merge_vars' => $user_data_array
-        
+        'merge_vars' => $user_data_array,
+         "tags" => [$get_currentsiteURl]
         
     );
    
@@ -6127,10 +6135,10 @@ if (is_admin()) { // note the use of is_admin() to double check that this is hap
         $config = array(
             'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
             'proper_folder_name' => 'EGPL', // this is the name of the folder your plugin lives in
-            'api_url' => 'https://api.github.com/repos/QasimRiaz/EGPL', // the GitHub API url of your GitHub repo
-            'raw_url' => 'https://raw.github.com/QasimRiaz/EGPL/master', // the GitHub raw url of your GitHub repo
-            'github_url' => 'https://github.com/QasimRiaz/EGPL', // the GitHub url of your GitHub repo
-            'zip_url' => 'https://github.com/QasimRiaz/EGPL/zipball/master', // the zip url of the GitHub repo
+            'api_url' => 'https://api.github.com/repos/QasimRiaz/MultisiteEGPL', // the GitHub API url of your GitHub repo
+            'raw_url' => 'https://raw.github.com/QasimRiaz/MultisiteEGPL/master', // the GitHub raw url of your GitHub repo
+            'github_url' => 'https://github.com/QasimRiaz/MultisiteEGPL', // the GitHub url of your GitHub repo
+            'zip_url' => 'https://github.com/QasimRiaz/MultisiteEGPL/zipball/master', // the zip url of the GitHub repo
             'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
             'requires' => '3.0', // which version of WordPress does your plugin require?
             'tested' => '3.3', // which version of WordPress is your plugin tested up to?
@@ -6148,16 +6156,24 @@ function exp_autocomplete_all_orders($order_id) {
         
         //$order = new WC_Order($order_id);
         $order = wc_get_order($order_id);
+        
+     
+        
+        
+        
         $payment_method = get_post_meta($order->id, '_payment_method', true);
         if($payment_method == 'cheque'){
            
                   foreach ($order->get_items() as $item_id => $item_obj) {
                     
+                      
+                      
+                    
                     $porduct_ids_array[] = wc_get_order_item_meta($item_id, '_product_id', true);
                  }
            
            
-           
+         
             exp_updateuser_role_onmpospurches($order,$porduct_ids_array);
             $order->update_status('completed');
         }
@@ -6168,16 +6184,34 @@ function exp_autocomplete_paid_orders($order_status, $order_id) {
         if (!$order_id)
                 return;
         $order = wc_get_order($order_id);
+        
+       
+        
         $payment_method = get_post_meta($order->id, '_payment_method', true);
         
         
             if (count($order->get_items()) > 0) {
                 foreach ($order->get_items() as $item_id => $item_obj) {
-                   
-                        $porduct_ids_array[] = wc_get_order_item_meta($item_id, '_product_id', true);
+                        
+                       
+                        $result_check = wc_get_order_item_meta($item_id, '_bundled_by', true);
+                        if(empty($result_check)){
+                            
+                            $porduct_ids_array[] = wc_get_order_item_meta($item_id, '_product_id', true);
+                            
+                        }
+                        
+                        
                    
                 }
             }
+            
+             
+         
+      
+        
+            
+            
             exp_updateuser_role_onmpospurches($order,$porduct_ids_array);
             if ($order_status == 'processing' && ($order->status == 'on-hold' || $order->status == 'pending' || $order->status == 'failed')) {
                 return 'completed';
@@ -6193,6 +6227,12 @@ function exp_updateuser_role_onmpospurches($order,$porduct_ids_array){
         global $current_user;
        // $lastInsertId = contentmanagerlogging('Purches MPOs',"User Action",serialize($order),''.$current_user->id,$current_user->user_email,"pre_action_data");
         require_once( 'temp/lib/woocommerce-api.php' );
+        
+        $test = 'custome_task_manager_data';
+        $taskkeyContent = get_option($test);
+        
+        
+        
         $url = get_site_url();//'https://'.$_SERVER['SERVER_NAME'];
         $options = array(
             'debug' => true,
@@ -6207,16 +6247,49 @@ function exp_updateuser_role_onmpospurches($order,$porduct_ids_array){
         $wooseceretkey = $woocommerce_rest_api_keys['ContentManager']['wooseceretkey'];
         $woocommerce = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
         
+        
+          
+        
         if (count($porduct_ids_array) > 0) {
                 foreach ($porduct_ids_array as $item=>$ids) {
                    
-                    
+                   
                     $getproduct_detail = $woocommerce->products->get( $ids );
-                    $assign_role[] = $getproduct_detail->product->tax_class;
                     
+                    
+                    if(!empty($getproduct_detail->product->tax_class)){
+                        
+                         $seletedroleValue = $getproduct_detail->product->tax_class;
+                         $assign_role[] = $seletedroleValue;
+                        
+                    }
+                    
+                   
+                    
+                    
+                    
+                    
+                    $selectedTaskListData = get_post_meta( $ids);
+                    $selectedTaskList = unserialize($selectedTaskListData['seletedtaskKeys'][0]);
+                    
+                    if(!empty($selectedTaskList['selectedtasks'])){
+                        
+                        
+                        
+                      
+                        $latestProductsValue = $selectedTaskList;
+                       
+                    
+                        
+                    }
+                    
+                      
                   
                 }
             }
+            
+    
+           
             
             $user_info = get_userdata($current_user->id);
             
@@ -6230,6 +6303,26 @@ function exp_updateuser_role_onmpospurches($order,$porduct_ids_array){
                        } 
                         
                     }
+                  if(!empty($latestProductsValue['selectedtasks'])){  
+                   foreach ($latestProductsValue['selectedtasks'] as $taskindex=>$taskKey){
+                       
+                       if(!empty($taskkeyContent['profile_fields'][$taskKey]['usersids'])){
+                           
+                           array_push($taskkeyContent['profile_fields'][$taskKey]['usersids'], $current_user->id);
+                           
+                       }else{
+                           
+                           $newindex[]=$current_user->id;
+                           $taskkeyContent['profile_fields'][$taskKey]['usersids'] = $newindex;
+                           
+                       }
+                       
+                       
+                   }
+                   update_option($test, $taskkeyContent);  
+                  }
+                  
+                   
                    
                 }
            
@@ -6323,7 +6416,7 @@ function checkloginuserstatus_fun() {
                             
                                
                             
-                                 echo '<script type="text/javascript">swal({title: "Warning", type: "warning", html:true,showConfirmButton:false,text: "<p>You don\'t have a level assigned. You will need to purchase a package. Please go to the shop by clicking the button below.</p><p style=\'margin-top:18px\'><a href='.$site_url.'/product-category/packages/\ class=\'fusion-button fusion-button-default fusion-button-large fusion-button-round fusion-button-flat\'>Shop</a></p>"});</script>';
+                                 echo '<script type="text/javascript">swal({title: "Welcome!", type: "success", html:true,showConfirmButton:false,text: "<p>This will serve as your portal for managing all of your pre-show logistics. Before gaining access, you\'ll need to first select and purchase a package.</p><p style=\'margin-top:18px\'><a href='.$site_url.'/product-category/packages/\ class=\'fusion-button fusion-button-default fusion-button-large fusion-button-round fusion-button-flat\'>Next</a></p>"});</script>';
                                 
                             }
                     }

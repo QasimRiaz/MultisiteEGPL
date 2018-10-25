@@ -38,7 +38,7 @@ if ( is_user_logged_in() ) {
                           if(isset($_GET['login']) && $_GET['login'] == 'failed'){
 						?>
 						<div id="login-error" style="margin-bottom: 10px; background-color: #FFEBE8;border:1px solid #C00;padding:5px;">
-						Login failed: You have entered an incorrect Username or password, please try again.
+						Incorrect Username and/or Password.
 						</div>
 						<?php
                         }
