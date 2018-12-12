@@ -614,8 +614,8 @@ function saveallbulktask(){
             jQuery('#'+taskid).parent('div').parent('td').parent('tr').addClass('emptyfielderror');
        
             requeststatus = 'stop';
-            errormsg = "More then one task have same title.Please prevent duplicate task titles.";
-            titlemsg = 'Duplicate Task Title';
+            errormsg = "Multiple tasks have the same title. Please give each task a unique title.";
+            titlemsg = 'Duplicate Task Title Detected';
             return false;
            
            

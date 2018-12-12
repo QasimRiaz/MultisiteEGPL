@@ -37,11 +37,6 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
        $client = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
        $product_cat_list = $client->products->get_categories() ;
        
-      
-       
-       
-     
-       
        if(isset($_GET['producttype'])){
        
            
@@ -54,6 +49,9 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
              }elseif ($product_type == 'addons') {
                  
                  $product_name_for_fields_lebal = "Add-on";
+             }elseif ($product_type == 'booths') {
+                 
+                 $product_name_for_fields_lebal = "Booth";
              }
            
            
@@ -93,10 +91,13 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                 
                 $product_name_for_fields_lebal = "Package";
                 
-           }else{
-               
+           }elseif ($selectedcat_name == 'Add-ons') {
+                $product_type = "addons";
                 $product_name_for_fields_lebal = "Add-on";
                
+           }elseif ($selectedcat_name == 'Booths'){
+               $product_type = "booths";
+               $product_name_for_fields_lebal = "Booth";
            }
            
          
@@ -136,10 +137,17 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                 <p>
                     Fill out the required fields to create your package. A package is a Level in ExpoGenie that your users have the option to purchase. Whenever a user purchases a package, they will be automatically assigned OR re-assigned to the level associated with that package.
                 </p>
-                <?php }else{?>
+                <?php }elseif($product_type == 'addons'){?>
                 
                 <p>
                     Fill out the required fields to create your add-on. Once published, these will be made available for all of your users within the portal to view and purchase.
+                </p>
+                
+               
+                <?php }elseif($product_type == 'booths'){?>
+                
+                <p>
+                    Fill out the required fields to create your Booth.
                 </p>
                 
                 <?php }?>
@@ -273,7 +281,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                                                   <option value="<?php echo $value->id; ?>" selected="selected"><?php echo $value->name; ?></option>
                                               <?php } 
                                           }
-                                      } else if($product_type == 'package') { 
+                                      } elseif($product_type == 'package') { 
                                           
                                           $typename =  'Packages';
                                           
@@ -286,7 +294,7 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                                                   <option value="<?php echo $value->id; ?>" selected="selected"><?php echo $value->name; ?></option>
                                                       
                                                   <?php } }
-                                  } else if($product_type == 'addons') { 
+                                  } elseif($product_type == 'addons') { 
                                       
                                       $typename =  'Add-ons';
                                       
@@ -297,17 +305,29 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                                               
                                                   <option value="<?php echo $value->id; ?>" selected="selected"><?php echo $value->name; ?></option>
 
-                                            <?php  } }} ?>        
+                                            <?php  } }}else if($product_type == 'booths') { 
+                                      
+                                      $typename =  'Booths';
+                                      
+                                      ?> ?> 
+                                             <?php foreach ($product_cat_list->product_categories as $key => $value) { ?>
+                                            <?php if($value->name == 'Booths'){?>
+                                              
+                                                  <option value="<?php echo $value->id; ?>" selected="selected"><?php echo $value->name; ?></option>
+
+                                            <?php  } }} ?> 
                                               
                                   </select>
                                   <label class="col-sm-2 form-control-label"><?php echo $typename;?></label>
 
                           </div>
                    </div>
-                  
-                    <div class="form-group row" id="assignmentlevelfield">
+                  <?php if($product_type == 'booths'){?>
+                  <div class="form-group row" id="assignmentlevelfield" style="display: none;">
                     
-                 
+                  <?php }else{ ?>
+                  <div class="form-group row" id="assignmentlevelfield" >
+                  <?php }?>
                                     <label class="col-sm-2 form-control-label">Assign Level <i data-toggle="tooltip" title="If you select a level here, the buyer of this product will be automatically assigned this level on successfully placing the order." class="fa fa-question-circle" aria-hidden="true"></i></label>
                                     <div class="col-sm-10">
                                            
@@ -344,7 +364,13 @@ if(!empty($wooconsumerkey) && !empty($wooseceretkey)){
                                         
                                     </div>
                  </div>
-                 <div class="form-group row" id="assignmentlevelfield">
+                 <?php if($product_type == 'booths'){?>
+                   <div class="form-group row" id="assignmentlevelfield" style="display: none;">
+                    
+                  <?php }else{ ?>
+                   <div class="form-group row" id="assignmentlevelfield">
+                  <?php }?>
+                
                     
                  
                                     <label class="col-sm-2 form-control-label">Select Tasks <i data-toggle="tooltip" title="If you select one or more tasks here, the buyer of this product will be automatically assigned these tasks on successfully placing the order." class="fa fa-question-circle" aria-hidden="true"></i></label>

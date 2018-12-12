@@ -328,6 +328,13 @@ $blog_id2 = get_current_blog_id();
                            
                             </a>
                       </li>
+                      <li class="mythemestyle">
+                           <a href="<?php echo $site_url; ?>/manage-exhibitor-booths/" >
+                                <i class="font-icon fa fa-cart-arrow-down"></i>
+                                <span class="lbl menumargine">Review Booth Purchases </span>
+                           
+                            </a>
+                      </li>
                     </ul>
                 </li>
              <?php } ?>  

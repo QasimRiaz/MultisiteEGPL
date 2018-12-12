@@ -26,6 +26,7 @@ function updatecontentsettings() {
    var addresspoints = jQuery("#addresspoints").val();
    var userreportcontent = jQuery("#userreportcontent").val();
    var expogeniefloorplan = jQuery("#expogeniefloorplan").val();
+   var defaultboothprice = jQuery("#defaultboothprice").val();
    
    var cventaccountname = jQuery("#cventaccountname").val();
    var cventusername = jQuery("#cventusername").val();
@@ -70,6 +71,7 @@ function updatecontentsettings() {
        data.append('selfsignstatus', selfsignstatus);
        data.append('userreportcontent', userreportcontent);
        data.append('expogeniefloorplan', expogeniefloorplan);
+       data.append('defaultboothprice', defaultboothprice);
        
        
        data.append('cventaccountname', cventaccountname);

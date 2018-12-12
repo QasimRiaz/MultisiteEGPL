@@ -37,12 +37,12 @@ $get_all_resources = get_posts( $args );
                         }</style>
                         <div class="fusion-row">
                             <div  style="text-align: center;margin-top:-42px;margin-bottom:31px;">
-                                <h1 >Forms</h1>
+                                <h1 >Resources</h1>
                             </div>
                         <div class="fusion-sep-clear"></div>
-                        <div class="fusion-separator fusion-full-width-sep sep-single" style="border-color:#32c3eb;border-top-width:1px;margin-left: auto;margin-right: auto;margin-top:15px;margin-bottom:25px;">
-                            <span class="icon-wrapper" style="border-color:#32c3eb;">
-                                <i class="fa fa-folder-open" style="color:#32c3eb;"></i>
+                        <div class="fusion-separator fusion-full-width-sep sep-single" style="border-color:#797979;border-top-width:1px;margin-left: auto;margin-right: auto;margin-top:15px;margin-bottom:25px;">
+                            <span class="icon-wrapper" style="border-color:#797979;">
+                                <i class="fa fa-folder-open" style="color:#797979;"></i>
                             </span>
                         </div>
                         </div>

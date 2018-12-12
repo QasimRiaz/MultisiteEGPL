@@ -15,7 +15,7 @@
     currentsiteurl = '<?php echo $base_url;?>';
   </script> 
   
-  
+<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>/wp-content/plugins/EGPL/css/jquery-confirm.css">
 <div id="content" class="full-width">
         <div class="page-content" style="max-width: 85%;margin-left: auto;margin-right: auto;">
         
@@ -104,7 +104,7 @@
                        <?php   foreach ($additional_fields as $key=>$value){  
                                 
                                 $htmlinputfield ="";
-                                if($additional_fields[$key]['type'] !='checkbox' && $additional_fields[$key]['type'] !='html' ){?>
+                                if($additional_fields[$key]['hiddenflag'] != true &&  $additional_fields[$key]['type'] !='checkbox' && $additional_fields[$key]['type'] !='html' ){?>
                               
                                 
                                 <div class="form-group row" >

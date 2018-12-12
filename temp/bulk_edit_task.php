@@ -7,13 +7,11 @@ if (current_user_can('administrator') || current_user_can('contentmanager')) {
     $test = 'custome_task_manager_data';
     $result = get_option($test);
     //$result = json_decode(json_encode($result), true);
-   
+    //echo '<pre>';
+    //print_r($result);exit;
     
     $test_setting = 'ContenteManager_Settings';
     $plug_in_settings = get_option($test_setting);
-    
-   //  echo '<pre>';
-    //print_r($plug_in_settings);exit;
     
     $fields = array( 'ID','user_email' );
     $args = array(

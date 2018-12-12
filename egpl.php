@@ -5,7 +5,7 @@
  * Plugin Name:       EGPL
  * Plugin URI:        https://github.com/QasimRiaz/MultisiteEGPL
  * Description:       EGPL
- * Version:           1.00
+ * Version:           2.00
  * Author:            EG
  * License:           GNU General Public License v2
  * Text Domain:       EGPL
@@ -2363,8 +2363,8 @@ function remove_sponsor_metas($user_id){
     
    if(!function_exists('wpmu_delete_user')) {
           
-    include($hom_path."/wp-admin/includes/ms.php");
-      require_once($hom_path.'/wp-admin/includes/user.php');
+        include($hom_path."/wp-admin/includes/ms.php");
+        require_once($hom_path.'/wp-admin/includes/user.php');
 	
     }
   
@@ -2379,14 +2379,20 @@ function remove_sponsor_metas($user_id){
     $user_blogs = get_blogs_of_user( $user_id );
     $blog_id = get_current_blog_id();
     
+   
+    
+    
     if(count($user_blogs) > 2){
+        
+      
         
         remove_user_from_blog($user_id, $blog_id);
         $msg = "This user removes from this blog successfully";
         
     }else{
         
-       $responce = wp_delete_user($user_id,1);
+        
+       $responce = wpmu_delete_user($user_id);
        $msg = "";
     }
     
@@ -3493,7 +3499,7 @@ function my_plugin_activate() {
                 
 // check if it is a multisite network
 
-if (is_multisite()) {
+
 //$blog_id = get_current_blog_id();
 
 // check if the plugin has been activated on the network or on a single site
@@ -3531,31 +3537,7 @@ if (is_multisite()) {
                       $result = update_option('EGPL_Settings_Additionalfield', $user_additional_field);
                   
              
-                $test_task = 'custome_task_manager_data';
-                $manage_bulk_task = get_option($test_task);
-                if (empty($manage_bulk_task['profile_fields'])) {
-
-                    $defulttask['task_company_logo_png_sfggpydf']['value'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['unique'] = 'no';
-                    $defulttask['task_company_logo_png_sfggpydf']['class'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['after'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['required'] = 'no';
-                    $defulttask['task_company_logo_png_sfggpydf']['allow_tags'] = 'yes';
-                    $defulttask['task_company_logo_png_sfggpydf']['add_to_profile'] = 'yes';
-                    $defulttask['task_company_logo_png_sfggpydf']['allow_multi'] = 'no';
-                    $defulttask['task_company_logo_png_sfggpydf']['size'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['label'] = 'Company Logo (PNG File)';
-                    $defulttask['task_company_logo_png_sfggpydf']['type'] = 'color';
-                    $defulttask['task_company_logo_png_sfggpydf']['lin_url'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['attrs'] = '04-Feb-2017';
-                    $defulttask['task_company_logo_png_sfggpydf']['taskattrs'] = '';
-                    $defulttask['task_company_logo_png_sfggpydf']['roles'][0] = 'all';
-                    $defulttask['task_company_logo_png_sfggpydf']['descrpition'] = 'Upload Company Logo (PNG File, 200 x 200 px)';
-                    $defulttask['task_company_logo_png_sfggpydf']['usersids'] = '';
-                    $manage_bulk_task['profile_fields'] = $defulttask;
-                    update_option($test_task, $manage_bulk_task);
-                }
-
+          
 
                 
                
@@ -3607,184 +3589,7 @@ if (is_multisite()) {
                     }
                 }
 
-                //$settings_array['ContentManager']['sponsor_name']='User';
-                //$settings_array['ContentManager']['attendyTypeKey']='Role';
-                if (get_option('ContenteManager_Settings')) {
-                    $oldvalues = get_option('ContenteManager_Settings');
-                }
-
-
-
-                $oldvalues['ContentManager']['taskmanager']['input_type'] = $task_input_type;
-                update_option('ContenteManager_Settings', $oldvalues);
-
-
-                $table_name = "contentmanager_logging";
-$menu_name = 'main_menu';
-           $menu_exists = wp_get_nav_menu_object( $menu_name );
-    
-       
-    
-    
-// If it doesn't exist, let's create it.
-    // 'menu_item_parent' =>
-if( !$menu_exists){
-    register_nav_menu($menu_name, 'Main Navigation');
-    $menu_id = wp_create_nav_menu($menu_name);
-    
-    $locations = get_theme_mod('nav_menu_locations');
-    $locations['main_navigation'] = $menu_id;
-    set_theme_mod( 'nav_menu_locations', $locations );
-    
-   
- 
-
-     $myPage = get_page_by_title('Home');
-    
-
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Home'),
-       
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-home',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        
-        ));
-    $myPage = get_page_by_title('Tasks');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('TASKS'),
-        'menu-item-status' => 'publish',
-        'fusion_megamenu_icon'=> 'fa-tasks',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        ));
-    
-    $myPage = get_page_by_title('Floor Plan');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('FLOOR PLAN'),
-        'menu-item-status' => 'publish',
-        'fusion_megamenu_icon'=> 'fa-map',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-     $myPage = get_page_by_title('Resources');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('RESOURCES'),
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-download',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-  
-    
-    $myPage = get_page_by_title('FAQs');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('FAQs'),
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-question-circle',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('ADMIN'),
-        'meni-item-type_label' => 'Custom Link',
-        'menu-item-status' => 'publish',
-        'menu-item-url' => home_url( '/dashboard' ),
-        'menu-item-fusion_megamenu_icon'=> 'fa-cog',
-        
-        ));
-
-    $myPage = get_page_by_title('Cart');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('CART'),
-         
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-cart-plus',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        
-
-        ));
-
-    
-    $menu_id_sub = wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('ACCOUNT'),
-        'meni-item-type_label' => 'Custom Link',
-        'menu-item-type' => 'custom',
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-user'
-        
-
-        ));
-    
-    
-    $myPage = get_page_by_title('My Sites');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('My Sites'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('Registration Codes');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Registration'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('Change Password');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Change Password'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('LogOut');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('LogOut'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'   
-       
-        ));
-  
-
-}
-
+               
                 global $wpdb;
 
                 $charset_collate = $wpdb->get_charset_collate();
@@ -3808,293 +3613,7 @@ if( !$menu_exists){
         }
         
         
-    } else {
-
-// activated on a single site
-        $get_all_roles_array = 'wp_user_roles';
-    $get_all_roles = get_option($get_all_roles_array);
-    if(!empty($get_all_roles)){
-        foreach ($get_all_roles as $key => $item) {
-        
-        if($item['name'] !='Administrator'){
-            
-           if(!array_key_exists('unfiltered_upload',$get_all_roles[$key]['capabilities'])){
-            $get_all_roles[$key]['capabilities']['unfiltered_upload'] = 1;
-            $get_all_roles[$key]['capabilities']['upload_files'] = 1;
-           }
-            
-            
-        }
-        
-    }
-        update_option( $get_all_roles_array, $get_all_roles ); 
-   }
     
-   $test_task = 'custome_task_manager_data';
-   $manage_bulk_task= get_option($test_task);
-   if(empty($manage_bulk_task['profile_fields'])){
-       
-       $defulttask['task_company_logo_png_sfggpydf']['value']='';
-       $defulttask['task_company_logo_png_sfggpydf']['unique']='no';
-       $defulttask['task_company_logo_png_sfggpydf']['class']='';
-       $defulttask['task_company_logo_png_sfggpydf']['after']='';
-       $defulttask['task_company_logo_png_sfggpydf']['required']='no';
-       $defulttask['task_company_logo_png_sfggpydf']['allow_tags']='yes';
-       $defulttask['task_company_logo_png_sfggpydf']['add_to_profile']='yes';
-       $defulttask['task_company_logo_png_sfggpydf']['allow_multi']='no';
-       $defulttask['task_company_logo_png_sfggpydf']['size']='';
-       $defulttask['task_company_logo_png_sfggpydf']['label']='Company Logo (PNG File)';
-       $defulttask['task_company_logo_png_sfggpydf']['type']='color';
-       $defulttask['task_company_logo_png_sfggpydf']['lin_url']='';
-       $defulttask['task_company_logo_png_sfggpydf']['attrs']='04-Feb-2017';
-       $defulttask['task_company_logo_png_sfggpydf']['taskattrs']='';
-       $defulttask['task_company_logo_png_sfggpydf']['roles'][0] =  'all';
-       $defulttask['task_company_logo_png_sfggpydf']['descrpition']='Upload Company Logo (PNG File, 200 x 200 px)';
-       $defulttask['task_company_logo_png_sfggpydf']['usersids']='';
-       $manage_bulk_task['profile_fields']  = $defulttask; 
-       update_option( $test_task, $manage_bulk_task ); 
-       
-   }
-   
-   
-  
-  update_option( 'EGPL_Settings_Additionalfield', $user_additional_field);
- 
-    $menu_name = 'main_menu';
-    $menu_exists = wp_get_nav_menu_object( $menu_name );
-    
-       
-    
-    
-// If it doesn't exist, let's create it.
-    // 'menu_item_parent' =>
-if( !$menu_exists){
-    register_nav_menu($menu_name, 'Main Navigation');
-    $menu_id = wp_create_nav_menu($menu_name);
-    
-    $locations = get_theme_mod('nav_menu_locations');
-    $locations['main_navigation'] = $menu_id;
-    set_theme_mod( 'nav_menu_locations', $locations );
-    
-   
- 
-
-     $myPage = get_page_by_title('Home');
-    
-
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Home'),
-       
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-home',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        
-        ));
-    $myPage = get_page_by_title('Tasks');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('TASKS'),
-        'menu-item-status' => 'publish',
-        'fusion_megamenu_icon'=> 'fa-tasks',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        ));
-    
-    $myPage = get_page_by_title('Floor Plan');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('FLOOR PLAN'),
-        'menu-item-status' => 'publish',
-        'fusion_megamenu_icon'=> 'fa-map',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-     $myPage = get_page_by_title('Resources');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('RESOURCES'),
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-download',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-  
-    
-    $myPage = get_page_by_title('FAQs');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('FAQs'),
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-question-circle',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-
-        ));
-    
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('ADMIN'),
-        'meni-item-type_label' => 'Custom Link',
-        'menu-item-status' => 'publish',
-        'menu-item-url' => home_url( '/dashboard' ),
-        'menu-item-fusion_megamenu_icon'=> 'fa-cog',
-        
-        ));
-
-    $myPage = get_page_by_title('Cart');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('CART'),
-         
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-cart-plus',
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-        
-
-        ));
-
-    
-    $menu_id_sub = wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('ACCOUNT'),
-        'meni-item-type_label' => 'Custom Link',
-        'menu-item-type' => 'custom',
-        'menu-item-status' => 'publish',
-        'menu-item-fusion_megamenu_icon'=> 'fa-user'
-        
-
-        ));
-    
-    
-    $myPage = get_page_by_title('My Sites');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('My Sites'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('Registration Codes');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Registration'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('Change Password');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('Change Password'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'
-       
-        ));
-    $myPage = get_page_by_title('LogOut');
-    wp_update_nav_menu_item($menu_id, 0, array(
-        'menu-item-title' =>  __('LogOut'),
-        'menu-item-status' => 'publish',
-        'menu-item-parent-id'=>$menu_id_sub,
-        'menu-item-object-id' => $myPage->ID,
-        'menu-item-object' => 'page',
-        'menu-item-type'      => 'post_type',
-        'menu-item-type_label' => 'Page'   
-       
-        ));
-  
-
-}
-                
-
-  
-  
-  foreach($create_pages_list as $key=>$value){
-      
-     
-      $page_path= $create_pages_list[$key]['name'];
-      $page = get_page_by_path($page_path);
-  
-     if (!$page) {
-                        if($create_pages_list[$key]['catname'] == true){
-                            $cat_name = 'content-manager-editor';
-                        }else{
-                            
-                             $cat_name = '' ; //'content-manager-editor';
-                        }
-                        
-                        $my_post = array(
-                            'post_title' => wp_strip_all_tags($create_pages_list[$key]['title']),
-                            'post_status' => 'publish',
-                            'post_author' => get_current_user_id(),
-                            'post_content'=> wp_strip_all_tags($all_pages_defult_content[$create_pages_list[$key]['name']]),
-                            'post_category' => $cat_name ,//'content-manager-editor',
-                            'post_type' => 'page',
-                            'post_name' => $page_path
-                        );
-
-// Insert the post into the database
-       $returnpage_ID = wp_insert_post($my_post);
-       update_post_meta( $returnpage_ID, '_wp_page_template', $create_pages_list[$key]['temp'] );
-      
-        
-    } 
-      
-  }
-
-    //$settings_array['ContentManager']['sponsor_name']='User';
-    //$settings_array['ContentManager']['attendyTypeKey']='Role';
-    if (get_option('ContenteManager_Settings')) {
-       $oldvalues = get_option( 'ContenteManager_Settings' );
-    }
-    
-    
-    
-    
-    $oldvalues['ContentManager']['taskmanager']['input_type']=$task_input_type;
-    update_option( 'ContenteManager_Settings', $oldvalues);
-    
-    $table_name ="contentmanager_logging";
-
-    global $wpdb;
-
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE contentmanager_log (
-     id bigint(20) NOT NULL AUTO_INCREMENT,
-     action_name varchar(60) NOT NULL,
-     action_type varchar(60) NOT NULL,
-     pre_action_data longtext NOT NULL,
-     user_email varchar(60) NOT NULL,
-     user_id varchar(60) NOT NULL,
-     result longtext NOT NULL,
-     action_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     PRIMARY KEY (id)
-    ) ENGINE=MyISAM;";
-
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    dbDelta( $sql );
-       
-    }
 
     
   
@@ -4108,7 +3627,7 @@ add_action( 'init', 'add_contentmanager_settings' );
 
 function add_contentmanager_settings() {
     
-    wp_register_script('adminjs', plugins_url('js/admin-cmanager.js?v=2.31', __FILE__), array('jquery'));
+    wp_register_script('adminjs', plugins_url('js/admin-cmanager.js?v=2.32', __FILE__), array('jquery'));
     wp_enqueue_script('adminjs');
     //$settings_array['ContentManager']['sponsor-name']='Exhibitor';
     //update_option( 'ContenteManager_Settings', $settings_array);
@@ -4189,9 +3708,9 @@ function updatecmanagersettings($object_data){
     $oldvalues['ContentManager']['mapapikey']=$mapapikey;
     $oldvalues['ContentManager']['mapsecretkey']=$mapsecretkey;
     $oldvalues['ContentManager']['userreportcontent']=stripslashes($userreportcontent);
+   
     
-    
-    
+    $oldvalues['ContentManager']['defaultboothprice']=$object_data['defaultboothprice'];
     $oldvalues['ContentManager']['cventaccountname']=$object_data['cventaccountname'];
     $oldvalues['ContentManager']['cventusername']=$object_data['cventusername'];;
     $oldvalues['ContentManager']['cventapipassword']=$object_data['cventapipassword'];;
@@ -4283,7 +3802,7 @@ function excludes_sponsor_meta(){
      $cventapipassword     =   $oldvalues['ContentManager']['cventapipassword'];
      $customfieldstatus    =   $oldvalues['ContentManager']['customfieldstatus'];
      
-     
+     $defaultboothprice    =   $oldvalues['ContentManager']['defaultboothprice'];
      
      $userreportcontent =   stripslashes($oldvalues['ContentManager']['userreportcontent']);
      $expogeniefloorplan    =   $oldvalues['ContentManager']['expogeniefloorplan'];
@@ -4372,12 +3891,16 @@ function excludes_sponsor_meta(){
        </tr>
        
 
-
+       <tr><td><h4>Default Booth Price</h4></td>
+ 
+        <td><input type="text" name="defaultboothprice"  id="defaultboothprice" value='.$defaultboothprice.'></td>
+       </tr>
 
        <tr><td><h4>Cvent Account Name</h4></td>
  
         <td><input type="text" name="cventaccountname"  id="cventaccountname" value='.$cventaccountname.'></td>
        </tr>
+       
         <tr><td><h4>Cvent Username</h4></td>
 
         <td>
@@ -4529,7 +4052,8 @@ class PageTemplater {
                         'temp/egpl_login.php'=>'Users Login',
                         'temp/egpl_resources_template.php'=>'Resources',
                         'temp/updateusersprefix.php'=>'Update User Meta',
-                        'temp/syncuserscvent.php'=>'Cvent Sync Users'
+                        'temp/syncuserscvent.php'=>'Cvent Sync Users',
+                        'temp/product-order-reporting-booth-template.php'=>'Manage Exhibitor Booths'
                        
                         
                      
@@ -4735,14 +4259,11 @@ function my_front_end_login_fail($error,$user, $pass ) {
     
         $tablename = 'contentmanager_'.$blog_id.'_log';
     }
-// if there's a valid referrer, and it's not the default log-in screen
- 
-      // echo '<pre>';
-      // print_r($message);exit;
+$_SERVER['currentuser'] = $user;
  
     global $wpdb;
     $query = "INSERT INTO ".$tablename." (action_name, action_type,pre_action_data,user_id,user_email,result) VALUES (%s,%s,%s,%s,%s,%s)";
-    $wpdb->query($wpdb->prepare($query, "Login Failed", "User Action",serialize($message),'','',''));
+    $wpdb->query($wpdb->prepare($query, "Login Failed", "User Action",serialize($message),'',$_SERVER['currentuser'],''));
 
 
 }
@@ -4773,9 +4294,10 @@ function customelogout() {
     
         $tablename = 'contentmanager_'.$blog_id.'_log';
     }
+    $_SERVER['currentuser'] = $current_user->user_email;
     $result="1";
      $query = "INSERT INTO ".$tablename." (action_name, action_type,pre_action_data,user_id,user_email,result) VALUES (%s,%s,%s,%s,%s,%s)";
-$wpdb->query($wpdb->prepare($query, "Logout", "User Action",serialize($current_user),$postid,$current_user->user_email,$result));
+$wpdb->query($wpdb->prepare($query, "Logout", "User Action",serialize($current_user),$postid,$_SERVER,$result));
     
     //switch_to_blog(1);
     wp_logout();
@@ -4802,8 +4324,15 @@ $blog_id =get_current_blog_id();
         $tablename = 'contentmanager_'.$blog_id.'_log';
     } 
 $_SERVER['currentuseremail'] = $email;
+$postArrayData['UserInfo'] = $_SERVER ;
+$emailwithIPAddress = $email.'---'.$_SERVER['REMOTE_ADDR'];
+$postArrayData['requestData'] = unserialize($pre_action_data) ;
+
+$postArrayData = serialize($postArrayData);
+
+
 $query = "INSERT INTO ".$tablename." (action_name, action_type,pre_action_data,user_id,user_email,result) VALUES (%s,%s,%s,%s,%s,%s)";
-$wpdb->query($wpdb->prepare($query, $acction_name, $action_type,unserialize($pre_action_data),$user_id,$email,$result));
+$wpdb->query($wpdb->prepare($query, $acction_name, $action_type,$postArrayData,$user_id,$emailwithIPAddress,$result));
 $lastInsertId = $wpdb->insert_id;
 return $lastInsertId;
 }
@@ -4823,7 +4352,7 @@ global $wpdb;
  $wpdb->update( 
     $tablename, 
     array( 
-        'result' => unserialize($result)  // string
+        'result' => $result  // string
        
     ), 
     array( 'id' => $lastInsertId )
@@ -6212,7 +5741,7 @@ function exp_autocomplete_paid_orders($order_status, $order_id) {
         
             
             
-            exp_updateuser_role_onmpospurches($order,$porduct_ids_array);
+            exp_updateuser_role_onmpospurches($order->id,$porduct_ids_array);
             if ($order_status == 'processing' && ($order->status == 'on-hold' || $order->status == 'pending' || $order->status == 'failed')) {
                 return 'completed';
             }
@@ -6248,14 +5777,33 @@ function exp_updateuser_role_onmpospurches($order,$porduct_ids_array){
         $woocommerce = new WC_API_Client( $url, $wooconsumerkey, $wooseceretkey, $options );
         
         
-          
+        
         
         if (count($porduct_ids_array) > 0) {
                 foreach ($porduct_ids_array as $item=>$ids) {
                    
-                   
+                    
                     $getproduct_detail = $woocommerce->products->get( $ids );
                     
+                    
+                    
+                    
+                    if($getproduct_detail->product->categories[0] == 'Booths'){
+                        
+                     
+                        $id = wp_insert_post(array('post_title'=>'Booth Purchase Review_'.$order, 'post_type'=>'booth_review', 'post_content'=>''));
+                        
+                        
+                        
+                      
+                        update_post_meta( $id, 'porductID', $ids );
+                        update_post_meta( $id, 'orderID', $order );
+                        update_post_meta( $id, 'OrderUserID', $current_user->id );
+                        update_post_meta( $id, 'boothStatus', 'Pending' );
+                        
+                        
+                        
+                    }else{
                     
                     if(!empty($getproduct_detail->product->tax_class)){
                         
@@ -6285,6 +5833,7 @@ function exp_updateuser_role_onmpospurches($order,$porduct_ids_array){
                     
                       
                   
+                }
                 }
             }
             
